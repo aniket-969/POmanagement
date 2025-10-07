@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import prisma, { pool, testConnection } from "./db/index.js";
+import prisma from "./db/index.js";
 import { app } from "./app.js";
 
 dotenv.config();
