@@ -4,8 +4,6 @@ import { app } from "./app.js";
 
 dotenv.config();
 
- 
-
 const startServer = async () => {
   try {
     await testConnection(); 

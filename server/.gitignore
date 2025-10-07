@@ -147,3 +147,5 @@ dist
 secrets
 /secrets/serviceAccountKey.json
 secrets/serviceAccountKey.json
+
+/src/generated/prisma
