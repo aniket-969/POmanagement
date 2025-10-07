@@ -1,12 +1,13 @@
 import dotenv from "dotenv";
-import {pool,testConnection} from "./db/index.js";
+import prisma, { pool, testConnection } from "./db/index.js";
 import { app } from "./app.js";
 
 dotenv.config();
 
 const startServer = async () => {
   try {
-    await testConnection(); 
+    await prisma.$connect();
+    console.log("✅ Connected to PostgreSQL with Prisma");
 
     const port = process.env.PORT || 9000;
     const server = app.listen(port, () => {
