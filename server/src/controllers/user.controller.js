@@ -13,7 +13,6 @@ export const isPasswordCorrect = async (plainPassword, passwordHash) => {
 export const getUserByEmail = async (email) => {
   return prisma.user.findUnique({
     where: { email },
-    // include passwordHash only for auth flows
     select: {
       id: true,
       email: true,
@@ -119,4 +118,17 @@ const cookieOptions = {
  return res
   .cookie("accessToken", accessToken, cookieOptions)
   .json(new ApiResponse(200, { user: safeUser }, "Login successful"));
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  
+  const cookieOptions = {
+    httpOnly: true,
+    path: "/", 
+  };
+
+  res
+    .clearCookie("accessToken", cookieOptions)
+    .status(200)
+    .json(new ApiResponse(200, {}, "Logged out successfully"));
 });
