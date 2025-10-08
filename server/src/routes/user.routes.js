@@ -1,10 +1,11 @@
 import {Router} from "express"
-import { registerUser } from "../controllers/user.controller.js"
+import { login, registerUser } from "../controllers/user.controller.js"
 import { validate } from '../middleware/validator.js';
-import { registerSchema } from './../zod/user.schema.js';
+import { loginSchema, registerSchema } from './../zod/user.schema.js';
 
 const router = Router()
 
 router.route("/register").post(validate(registerSchema),registerUser)
-
+router.route("/login").post(validate(loginSchema),login)
+ 
 export default router
