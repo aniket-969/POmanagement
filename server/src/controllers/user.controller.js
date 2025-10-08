@@ -5,10 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
-
-  if (!fullName || !email || !password) {
-    throw new ApiError(400, "All fields are required.");
-  }
+console.log(req.body)
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {

@@ -9,7 +9,7 @@ export const validate = (schema) => async (req, res, next) => {
       console.error('Validation Error:', error);  
       res.status(400).json({
         message: "Validation failed",
-        errors: error.errors  
+        errors: error?.message  
       });
     }
   };
