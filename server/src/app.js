@@ -13,7 +13,11 @@ app.use(cors({
 }))
 
 import userRouter from "./routes/user.routes.js"
-
+import adminRouter from "./routes/admin.routes.js"
+import purchaseOrderRouter from "./routes/purchaseOrder.routes.js"
+ 
 app.use("/api/v1/users",userRouter)
-
+app.use("/api/v1/users/admin",adminRouter)
+app.use("/api/v1/purchaseOrder",purchaseOrderRouter)
+ 
 export {app}

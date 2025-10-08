@@ -34,8 +34,8 @@ const createAccessToken = (payload) => {
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
-// console.log(req.body)
-
+console.log(req.body)
+ 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new ApiError(409, "User already exists with this email.");
@@ -145,3 +145,4 @@ export const fetchSession = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { user }, "Session fetched"));
 });
+

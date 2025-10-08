@@ -16,11 +16,13 @@ const startServer = async () => {
 
     server.on("error", (err) => {
       console.error("❌ Server failed to start:", err);
-    });
+    });   
   } catch (err) {
-    console.error("💥 Database connection failed, aborting server start.");
+    console.log(err)
+    console.error("💥 Database connection failed, aborting server start.",err);
     process.exit(1); // stop the process
   }
-};
+}; 
 
 startServer();
+ 

@@ -6,7 +6,7 @@
    "type": "module",
    "scripts": {
       "start": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
-      "seed":"node prisma/seed.js"
+      "seed": "node prisma/seed.js"
    },
    "keywords": [
       "javascript",
@@ -16,7 +16,7 @@
    "author": "Aniket Baranwal",
    "license": "ISC",
    "dependencies": {
-      "@prisma/client": "^6.16.3",
+      "@prisma/client": "^6.17.0",
       "bcrypt": "^6.0.0",
       "cookie-parser": "^1.4.7",
       "cors": "^2.8.5",
@@ -27,6 +27,6 @@
    },
    "devDependencies": {
       "nodemon": "^3.1.10",
-      "prisma": "^6.16.3"
+      "prisma": "^6.17.0"
    }
 }

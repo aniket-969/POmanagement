@@ -3,7 +3,7 @@ CREATE TYPE "UserRole" AS ENUM ('creator', 'approver', 'admin');
 
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('pending', 'active', 'suspended');
-
+ 
 -- CreateEnum
 CREATE TYPE "PoStatus" AS ENUM ('draft', 'submitted', 'approved', 'rejected');
 
