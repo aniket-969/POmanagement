@@ -124,6 +124,7 @@ export const logout = asyncHandler(async (req, res) => {
   
   const cookieOptions = {
     httpOnly: true,
+    secure:true,
     path: "/", 
   };
 
