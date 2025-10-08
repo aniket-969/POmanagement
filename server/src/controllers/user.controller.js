@@ -133,3 +133,15 @@ export const logout = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Logged out successfully"));
 });
+
+export const fetchSession = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new ApiError(401, "Unauthorized. No active session found.");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "Session fetched"));
+});
