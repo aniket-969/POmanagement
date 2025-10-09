@@ -3,7 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route, 
+  Route,
   Outlet,
 } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,10 +11,14 @@ import { useQueryClient } from "@tanstack/react-query";
 // Layouts
 import Layout from "../../layouts/Layout.jsx";
 import AuthLayout from "../../layouts/AuthLayout";
+import POLayout from "../../layouts/POLayout.jsx";
 
 // Pages
 import LandingPage from "../LandingPage.jsx";
 import { NotFound } from "../NotFound.jsx";
+import Admin from "../admin/index.jsx";
+import Approver from "../approver/index.jsx";
+import User from "../user/index.jsx"
 
 const Login = React.lazy(() => import("../auth/Login.jsx"));
 const Register = React.lazy(() => import("../auth/Register.jsx"));
@@ -36,7 +40,14 @@ export const AppRouter = () => {
               <Route path="register" element={<Register />} />
             </Route>
 
-            
+            {/* Protected routes */}
+            <Route path="orders" element={<POLayout />}>
+              <Route path="admin" element={<Admin />} />
+              <Route path="approver" element={<Approver />} />
+              <Route path="user" element={<User />} />
+
+            </Route>
+
             {/* Fallback */}
             <Route path="*" element={<NotFound />} />
           </Route>
