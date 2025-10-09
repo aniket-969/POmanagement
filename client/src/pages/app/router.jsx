@@ -20,7 +20,6 @@ import { NotFound } from "../NotFound.jsx";
 // const Login = React.lazy(() => import("../auth/Login.jsx"));
 // const Register = React.lazy(() => import("../auth/Register.jsx"));
 
-
 export const AppRouter = () => {
   const queryClient = useQueryClient();
 
