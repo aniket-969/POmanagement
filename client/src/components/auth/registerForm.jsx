@@ -40,7 +40,6 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
     return (
         <Box
             sx={{
-                minHeight: "100vh",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
