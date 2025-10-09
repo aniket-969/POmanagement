@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema} from "../../schema/auth.js"
+import { registerSchema } from "../../schema/auth.js"
 import {
     TextField,
     Button,
@@ -9,6 +9,8 @@ import {
     Paper,
     Stack,
 } from "@mui/material";
+import { useAuth } from "../../hooks/useAuth.jsx";
+import { toast } from "react-toastify";
 
 const defaultValues = {
     fullName: "",
@@ -25,39 +27,41 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
         resolver: zodResolver(registerSchema),
         defaultValues,
     });
-
+    const { registerMutation } = useAuth()
     const onSubmit = async (data) => {
         try {
 
-            console.log("Register data:", data);
-            return
+            console.log("login data:", data);
+
+            const response = await registerMutation.mutateAsync(data)
+            console.log(response)
         } catch (err) {
             console.error(err);
         }
     };
 
     return (
-        <Box 
+        <Box
             sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                marginLeft:5,
-                marginRight:5,
-                width:"100%"
+                marginLeft: 5,
+                marginRight: 5,
+                width: "100%"
             }}
         >
-           <Paper
-      elevation={3}
-      sx={{
-        width: "100%",        
-        // maxWidth: { xs: 520, sm: 420, md: 480 },
-        maxWidth:"350px", 
-        p: 4,
-        m:2,
-        borderRadius: 3,        
-      }}
-    >
+            <Paper
+                elevation={3}
+                sx={{
+                    width: "100%",
+                    // maxWidth: { xs: 520, sm: 420, md: 480 },
+                    maxWidth: "350px",
+                    p: 4,
+                    m: 2,
+                    borderRadius: 3,
+                }}
+            >
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <Stack spacing={2}>

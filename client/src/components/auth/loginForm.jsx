@@ -35,7 +35,6 @@ export default function RegisterForm() {
 
             const response = await loginMutation.mutateAsync(data)
             console.log(response)
-            toast("Login successful")
             
         } catch (err) {
             console.error(err);

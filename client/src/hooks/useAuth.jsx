@@ -26,6 +26,7 @@ export const useAuth = () => {
         onSuccess: (data) => {
             console.log(data);
             navigate("/login");
+             toast(data?.data?.message||"Login successful")
         },
         onError: (error) => {
             toast(
@@ -46,6 +47,7 @@ export const useAuth = () => {
             if (user.role == "admin") navigate("/orders/admin");
             else if (user.role == "creator") navigate("/orders/user");
             else navigate("/orders/approver");
+            toast(data?.data?.message||"Login successful")
         },
         onError: (error) => {
             console.error("Login error:", error);
