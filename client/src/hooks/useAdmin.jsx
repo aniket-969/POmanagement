@@ -1,0 +1,55 @@
+ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import {
+  approveUser,
+  createApprover,
+  getPendingCreators,
+} from "../api/queries/admin";
+
+export const useAdmin = () => {
+  const queryClient = useQueryClient();
+
+  const pendingCreatorsQuery = useQuery({
+    queryKey: ["admin", "pending-creators"],
+    queryFn: getPendingCreators,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000, // 30 
+    cacheTime: 60 * 60 * 1000, 
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: ({ id, data }) => approveUser(id, data),
+    onSuccess: () => {
+      toast.success("User approved successfully!");
+      queryClient.invalidateQueries(["admin", "pending-creators"]);
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message || "Failed to approve user.";
+      toast.error(message);
+      console.error("Approve user error:", error);
+    },
+  });
+
+  const createApproverMutation = useMutation({
+    mutationFn: createApprover,
+    onSuccess: () => {
+      toast.success("Approver created successfully!");
+      queryClient.invalidateQueries(["admin", "approvers"]); // optional, if you have an approver list later
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message || "Failed to create approver.";
+      toast.error(message);
+      console.error("Create approver error:", error);
+    },
+  });
+
+  return {
+    pendingCreatorsQuery,
+    approveMutation,
+    createApproverMutation,
+  };
+};
+
+export default useAdmin;

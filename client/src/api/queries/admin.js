@@ -9,3 +9,7 @@ export const approveUser = async (id,data) => {
 export const createApprover = (data) => {
   return axiosClient.post(`/${base}/approver`, data);
 };
+
+export const getPendingCreators = () => {
+  return axiosClient.get(`/${base}/creators`);
+};

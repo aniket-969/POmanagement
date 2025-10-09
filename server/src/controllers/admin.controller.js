@@ -73,3 +73,54 @@ export const createApprover = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, { user: approver }, "Approver created successfully."));
 });
+
+export const getPendingCreators = asyncHandler(async (req, res) => {
+
+  const user = req.user;
+console.log("here")
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null;
+  const skip = (page - 1) * limit;
+
+  const where = {
+    status: "pending",
+    role: "creator",
+  };
+
+  if (q) {
+    where.OR = [
+      { email: { contains: q, mode: "insensitive" } },
+      { fullName: { contains: q, mode: "insensitive" } },
+    ];
+  }
+
+  const totalCount = await prisma.user.count({ where });
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+
+  const data = await prisma.user.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: limit,
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { data, page, limit, totalCount, totalPages },
+        "Pending creators fetched"
+      )
+    );
+});

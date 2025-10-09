@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-
     fetchSession,
     loginUser,
     logOut,
@@ -40,10 +39,11 @@ export const useAuth = () => {
         mutationFn: loginUser,
         onSuccess: (data) => {
             // console.log(data.data.data);
-            console.log(data)
-            const user = data?.data?.data
+            // console.log(data)
+            const user = data?.data?.data?.user
             localStorage.setItem("session", JSON.stringify(user));
             queryClient.invalidateQueries(["auth", "session"]);
+            console.log("role",user,user.role)
             if (user.role == "admin") navigate("/orders/admin");
             else if (user.role == "creator") navigate("/orders/user");
             else navigate("/orders/approver");
