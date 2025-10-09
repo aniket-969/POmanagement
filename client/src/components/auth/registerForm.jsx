@@ -47,9 +47,6 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
             }}
         >
             <Paper elevation={3} sx={{ p: 4, width: 400, borderRadius: 3 }}>
-                <Typography variant="h5" textAlign="center" mb={3}>
-                    Register
-                </Typography>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <Stack spacing={2}>
