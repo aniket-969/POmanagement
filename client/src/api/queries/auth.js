@@ -17,6 +17,6 @@ export const loginUser = (data) => {
 };
 
 export const logOut = () => {
-  return axiosClient.post(`/${base}/me/logout`);
+  return axiosClient.post(`/${base}/logout`);
 };
 
