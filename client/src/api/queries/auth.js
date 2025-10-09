@@ -11,7 +11,7 @@ export const fetchSession = async () => {
 export const registerUser = (data) => {
   return axiosClient.post(`/${base}/register`, data);
 };
-
+  
 export const loginUser = (data) => {
   return axiosClient.post(`/${base}/login`, data);
 };
@@ -20,3 +20,4 @@ export const logOut = () => {
   return axiosClient.post(`/${base}/logout`);
 };
 
+ 

@@ -35,17 +35,17 @@ export const useAuth = () => {
         },
     });
 
-    // Login User Mutation
     const loginMutation = useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
             // console.log(data.data.data);
+            console.log(data)
             const user = data?.data?.data
             localStorage.setItem("session", JSON.stringify(user));
             queryClient.invalidateQueries(["auth", "session"]);
-            if (user.role == "admin") navigate("/admin");
-            else if (user.role == "creator") navigate("/user");
-            else navigate("/approver");
+            if (user.role == "admin") navigate("/orders/admin");
+            else if (user.role == "creator") navigate("/orders/user");
+            else navigate("/orders/approver");
         },
         onError: (error) => {
             console.error("Login error:", error);
@@ -56,7 +56,6 @@ export const useAuth = () => {
         },
     });
 
-    // Logout Mutation
     const logoutMutation = useMutation({
         mutationFn: logOut,
         onSuccess: () => {

@@ -1,4 +1,3 @@
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, registerSchema } from "../../schema/auth.js"
@@ -10,13 +9,16 @@ import {
     Paper,
     Stack,
 } from "@mui/material";
+import { useAuth } from "../../hooks/useAuth.jsx";
+import { toast } from "react-toastify";
 
 const defaultValues = {
     email: "",
     password: "",
 };
 
-export default function RegisterForm({ onSubmit: handleRegister }) {
+export default function RegisterForm() {
+    const {loginMutation} = useAuth()
     const {
         control,
         handleSubmit,
@@ -30,7 +32,11 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
         try {
 
             console.log("login data:", data);
-            return
+
+            const response = await loginMutation.mutateAsync(data)
+            console.log(response)
+            toast("Login successful")
+            
         } catch (err) {
             console.error(err);
         }
@@ -51,7 +57,6 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
       elevation={3}
       sx={{
         width: "100%",        
-        // maxWidth: { xs: 520, sm: 420, md: 480 },
         maxWidth:"350px", 
         p: 4,
         m:2,

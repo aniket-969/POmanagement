@@ -6,11 +6,11 @@ const axiosClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-axiosClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.log(error)
-  }
-);
+// axiosClient.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     // console.log(error)
+//   }
+// );
 
 export default axiosClient;
