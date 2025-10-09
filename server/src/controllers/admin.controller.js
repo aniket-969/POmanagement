@@ -10,7 +10,7 @@ export const approveUser = asyncHandler(async (req, res) => {
   const userId = Number(req.params.id);
   if (!userId || Number.isNaN(userId)) {
     throw new ApiError(400, "Invalid user id.");
-  }
+  } 
 
   const target = await prisma.user.findUnique({
     where: { id: userId },
@@ -39,6 +39,65 @@ export const approveUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { user: updated }, "User approved successfully."));
 });
+
+export const rejectUser = asyncHandler(async (req, res) => {
+  const caller = req.user;
+  const userId = Number(req.params.id);
+
+  if (!userId || Number.isNaN(userId)) {
+    throw new ApiError(400, "Invalid user id.");
+  }
+
+  const target = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!target) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  if (target.role !== "creator") {
+    throw new ApiError(
+      400,
+      "Only users with role 'creator' can be rejected via this endpoint."
+    );
+  }
+
+  if (target.status !== "pending") {
+    throw new ApiError(
+      400,
+      `User status must be 'pending' to reject. Current status: ${target.status}`
+    );
+  }
+
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: { status: "suspended" },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user: updated }, "User rejected successfully."));
+});
+
 
 export const createApprover = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
