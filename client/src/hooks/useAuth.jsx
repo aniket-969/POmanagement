@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 export const useAuth = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    
     const sessionQuery = useQuery({
         queryKey: ["auth", "session"],
         queryFn: fetchSession,
