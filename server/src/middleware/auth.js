@@ -50,3 +50,4 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+ 
