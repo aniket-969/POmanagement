@@ -37,15 +37,27 @@ export default function RegisterForm({ onSubmit: handleRegister }) {
     };
 
     return (
-        <Box
+        <Box 
             sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                bgcolor: "#f8f9fa",
+                marginLeft:5,
+                marginRight:5,
+                width:"100%"
             }}
         >
-            <Paper elevation={3} sx={{ p: 4, width: 400, borderRadius: 3 }}>
+           <Paper
+      elevation={3}
+      sx={{
+        width: "100%",        
+        // maxWidth: { xs: 520, sm: 420, md: 480 },
+        maxWidth:"350px", 
+        p: 4,
+        m:2,
+        borderRadius: 3,        
+      }}
+    >
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <Stack spacing={2}>

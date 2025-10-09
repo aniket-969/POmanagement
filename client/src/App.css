@@ -4,3 +4,19 @@
   padding: 2rem;
   text-align: center;
 }
+
+.bb{
+  border: 2px solid blue
+}
+
+.br{
+  border: 2px solid red
+}
+
+.bgr{
+  border: 2px solid green
+}
+
+.by{
+  border: 2px solid yellow
+}

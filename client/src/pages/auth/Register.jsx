@@ -13,6 +13,7 @@ const Register = () => {
         maxHeight: "100vh",
         gap: 2,
         mt:5,
+        width:"100%",
       }}
     >
       <Typography variant="h4" gutterBottom>
