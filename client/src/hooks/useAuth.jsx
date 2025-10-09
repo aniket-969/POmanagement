@@ -44,7 +44,7 @@ export const useAuth = () => {
             localStorage.setItem("session", JSON.stringify(user));
             queryClient.invalidateQueries(["auth", "session"]);
             if (user.role == "admin") navigate("/admin");
-            else if (user.role == "creator") navigate("/creator");
+            else if (user.role == "creator") navigate("/user");
             else navigate("/approver");
         },
         onError: (error) => {

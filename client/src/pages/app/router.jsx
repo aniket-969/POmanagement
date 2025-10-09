@@ -19,6 +19,7 @@ import { NotFound } from "../NotFound.jsx";
 import Admin from "../admin/index.jsx";
 import Approver from "../approver/index.jsx";
 import User from "../user/index.jsx"
+import RoleRedirect from "../../utils/RoleRedirect.jsx";
 
 const Login = React.lazy(() => import("../auth/Login.jsx"));
 const Register = React.lazy(() => import("../auth/Register.jsx"));
@@ -42,6 +43,7 @@ export const AppRouter = () => {
 
             {/* Protected routes */}
             <Route path="orders" element={<POLayout />}>
+             <Route index element={<RoleRedirect />} /> 
               <Route path="admin" element={<Admin />} />
               <Route path="approver" element={<Approver />} />
               <Route path="user" element={<User />} />
