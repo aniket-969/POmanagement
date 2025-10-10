@@ -20,7 +20,7 @@ export const useAdmin = () => {
   }); 
 
   const approveMutation = useMutation({
-    mutationFn: ({ id, data }) => approveUser(id, data),
+    mutationFn: ({ id }) => approveUser(id),
     onSuccess: () => {
       toast.success("User approved successfully!");
       queryClient.invalidateQueries(["admin", "pending-creators"]);

@@ -2,7 +2,8 @@ import axiosClient from "../axiosClient";
 
 const base = "users/admin";
 
-export const approveUser = async (id,data) => {
+export const approveUser = async (id) => {
+  console.log(id)
    return axiosClient.post(`/${base}/${id}/approve`, data);
 };
 

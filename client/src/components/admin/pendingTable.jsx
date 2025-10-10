@@ -1,10 +1,53 @@
-import React from 'react'
+import * as React from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import ApproveUser from "./approveUser";
+import RejectUser from "./rejectUser";
 
-const PendingTable = ({pendingData}) => {
-    console.log(pendingData)
+const PendingTable = ({ pendingData }) => {
+  console.log(pendingData);
+
+  if (pendingData.length === 0)
+    return <EmptyState message="No pending users." />;
+
   return (
-    <div>PendingTable</div>
-  )
-}
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>email</TableCell>
+            <TableCell align="right">Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {pendingData.map((row) => (
+            <TableRow
+              key={row.id}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {row.fullName}
+              </TableCell>
+              <TableCell>{row.email}</TableCell>
+              <TableCell align="right">
+                <ApproveUser id={row.id}/>
+              </TableCell>
 
-export default PendingTable
+              <TableCell align="right">
+                <RejectUser id={row.id}/>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+export default PendingTable;
