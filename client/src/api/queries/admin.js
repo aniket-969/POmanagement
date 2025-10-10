@@ -4,11 +4,11 @@ const base = "users/admin";
 
 export const approveUser = async (id) => {
   console.log(id)
-   return axiosClient.post(`/${base}/${id}/approve`, data);
+   return axiosClient.patch(`/${base}/${id}/approve`);
 };
 
-export const rejectUser = async (id,data) => {
-   return axiosClient.post(`/${base}/${id}/reject`, data);
+export const rejectUser = async (id) => {
+   return axiosClient.patch(`/${base}/${id}/reject`);
 };
 
 export const createApprover = (data) => {
