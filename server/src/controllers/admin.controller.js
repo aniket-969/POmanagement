@@ -2,6 +2,7 @@ import prisma from "../db/index.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
+import bcrypt from "bcrypt"
 
 export const approveUser = asyncHandler(async (req, res) => {
  

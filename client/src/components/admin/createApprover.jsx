@@ -31,7 +31,7 @@ const CreateApprover = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <CreateApproverForm/>
+        <CreateApproverForm handleClose={handleClose}/>
         </Box>
       </Modal>
     </div>

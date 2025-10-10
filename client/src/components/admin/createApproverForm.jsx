@@ -16,7 +16,7 @@ const defaultValues = {
   email: "",
   password: "",
 };
-const CreateApproverForm = () => {
+const CreateApproverForm = ({handleClose}) => {
   const {
     control,
     handleSubmit,
@@ -25,7 +25,7 @@ const CreateApproverForm = () => {
     resolver: zodResolver(registerSchema),
     defaultValues,
   });
-  
+
   const { createApproverMutation } = useAdmin();
 
   const onSubmit = async (data) => {
@@ -36,6 +36,9 @@ const CreateApproverForm = () => {
       console.log(response);
     } catch (err) {
       console.error(err);
+    }
+    finally{
+        handleClose()
     }
   };
 
