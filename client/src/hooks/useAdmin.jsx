@@ -16,8 +16,8 @@ export const useAdmin = () => {
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000, 
     cacheTime: 60 * 60 * 1000,
-    enabled:false 
-  });
+    enabled:true 
+  }); 
 
   const approveMutation = useMutation({
     mutationFn: ({ id, data }) => approveUser(id, data),

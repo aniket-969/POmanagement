@@ -16,5 +16,7 @@ export const createApprover = (data) => {
 };
 
 export const getPendingCreators = () => {
+  console.log("called")
+ 
   return axiosClient.get(`/${base}/creators`);
 };
