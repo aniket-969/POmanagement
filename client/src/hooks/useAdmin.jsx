@@ -64,6 +64,7 @@ export const useAdmin = () => {
     pendingCreatorsQuery,
     approveMutation,
     createApproverMutation,
+    rejectMutation
   };
 };
 
