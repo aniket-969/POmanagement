@@ -4,6 +4,7 @@ import {
   approveUser,
   createApprover,
   getPendingCreators,
+  rejectUser,
 } from "../api/queries/admin";
 
 export const useAdmin = () => {
@@ -13,7 +14,7 @@ export const useAdmin = () => {
     queryKey: ["admin", "pending-creators"],
     queryFn: getPendingCreators,
     refetchOnWindowFocus: false,
-    staleTime: 30 * 60 * 1000, // 30 
+    staleTime: 30 * 60 * 1000, 
     cacheTime: 60 * 60 * 1000, 
   });
 
@@ -31,11 +32,25 @@ export const useAdmin = () => {
     },
   });
 
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, data }) => rejectUser(id, data),
+    onSuccess: () => {
+      toast.success("User approved successfully!");
+      queryClient.invalidateQueries(["admin", "pending-creators"]);
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message || "Failed to approve user.";
+      toast.error(message);
+      console.error("Approve user error:", error);
+    },
+  });
+
   const createApproverMutation = useMutation({
     mutationFn: createApprover,
     onSuccess: () => {
       toast.success("Approver created successfully!");
-      queryClient.invalidateQueries(["admin", "approvers"]); // optional, if you have an approver list later
+      queryClient.invalidateQueries(["admin", "approvers"]);
     },
     onError: (error) => {
       const message =

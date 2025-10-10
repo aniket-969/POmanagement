@@ -9,7 +9,7 @@ const router = Router()
 
 router.use(verifyJWT,verifyAdmin)
 router.route("/:id/approve").patch(approveUser)
-router.route("/:id/approve").patch(rejectUser)
+router.route("/:id/reject").patch(rejectUser)
 router.route("/approver").post(validate(registerSchema),createApprover)
 router.route("/creators").get(getPendingCreators)
 

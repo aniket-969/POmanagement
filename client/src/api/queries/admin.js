@@ -6,6 +6,10 @@ export const approveUser = async (id,data) => {
    return axiosClient.post(`/${base}/${id}/approve`, data);
 };
 
+export const rejectUser = async (id,data) => {
+   return axiosClient.post(`/${base}/${id}/reject`, data);
+};
+
 export const createApprover = (data) => {
   return axiosClient.post(`/${base}/approver`, data);
 };
