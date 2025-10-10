@@ -18,7 +18,7 @@ const defaultValues = {
     password: "",
 };
 
-export default function RegisterForm({ onSubmit: handleRegister }) {
+export default function RegisterForm() {
     const {
         control,
         handleSubmit,

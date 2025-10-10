@@ -2,7 +2,7 @@
 import { toast } from "react-toastify";
 import {
   approveUser,
-  createApprover,
+  createApprover, 
   getPendingCreators,
   rejectUser,
 } from "../api/queries/admin";
@@ -15,7 +15,8 @@ export const useAdmin = () => {
     queryFn: getPendingCreators,
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000, 
-    cacheTime: 60 * 60 * 1000, 
+    cacheTime: 60 * 60 * 1000,
+    enabled:false 
   });
 
   const approveMutation = useMutation({
@@ -58,7 +59,7 @@ export const useAdmin = () => {
       toast.error(message);
       console.error("Create approver error:", error);
     },
-  });
+  }); 
 
   return {
     pendingCreatorsQuery,

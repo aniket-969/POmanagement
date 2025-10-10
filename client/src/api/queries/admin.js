@@ -11,6 +11,7 @@ export const rejectUser = async (id,data) => {
 };
 
 export const createApprover = (data) => {
+  console.log(data)
   return axiosClient.post(`/${base}/approver`, data);
 };
 
