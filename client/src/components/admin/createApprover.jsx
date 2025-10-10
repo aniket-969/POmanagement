@@ -23,7 +23,7 @@ const CreateApprover = () => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Create Approver</Button>
+      <Button onClick={handleOpen}variant='outlined'>Create Approver</Button>
       <Modal
         open={open}
         onClose={handleClose}

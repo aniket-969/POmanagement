@@ -99,7 +99,6 @@ export const rejectUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { user: updated }, "User rejected successfully."));
 });
 
-
 export const createApprover = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
 

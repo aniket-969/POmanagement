@@ -4,7 +4,9 @@ import PendingList from "../../components/admin/pendingList"
 
 const Admin = () => {
   return (
-    <Box>
+    <Box sx={{
+        p:2
+    }}>
         <Topbar/>
         <PendingList/>
     </Box>

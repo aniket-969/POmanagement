@@ -5,7 +5,19 @@ import CreateApprover from './createApprover'
 
 const Topbar = () => {
   return (
-    <Box>
+    <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    gap: 2,
+    width: "100%",
+    flexDirection: {
+      xs: "column", 
+      sm: "row",  
+    },
+  }}
+>
       <SearchInput/>
       <CreateApprover/>
     </Box>
