@@ -64,6 +64,7 @@ export const useAuth = () => {
             queryClient.invalidateQueries(["auth", "session"]);
             localStorage.clear();
             navigate("/login");
+            toast("logged out successfully")
         },
         onError: (error) => {
             toast(
