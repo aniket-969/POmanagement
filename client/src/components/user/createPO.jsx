@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+import CreatePOForm from './createPOForm';
 
 const style = {
   position: 'absolute',
@@ -29,7 +30,7 @@ const CreatePO = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        {/* <CreateApproverForm handleClose={handleClose}/> */}
+        <CreatePOForm handleClose={handleClose}/>
         </Box>
       </Modal>
     </div>
