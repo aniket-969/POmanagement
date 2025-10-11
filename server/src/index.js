@@ -7,20 +7,20 @@ dotenv.config();
 const startServer = async () => {
   try {
     await prisma.$connect();
-    console.log("✅ Connected to PostgreSQL with Prisma");
+    console.log("Connected to PostgreSQL with Prisma");
 
     const port = process.env.PORT || 9000;
     const server = app.listen(port, () => {
-      console.log(`🚀 Server running on port ${port}`);
+      console.log(`Server running on port ${port}`);
     });
 
     server.on("error", (err) => {
-      console.error("❌ Server failed to start:", err);
+      console.error("Server failed to start:", err);
     });   
   } catch (err) {
     console.log(err)
-    console.error("💥 Database connection failed, aborting server start.",err);
-    process.exit(1); // stop the process
+    console.error("Database connection failed, aborting server start.",err);
+    process.exit(1); 
   }
 }; 
 

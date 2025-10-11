@@ -8,7 +8,7 @@ const Admin = () => {
         p:2,
         display:"flex",
         flexDirection:"column",
-        gap:4
+        gap:4,
     }}>
         <Topbar/>
         <PendingList/>

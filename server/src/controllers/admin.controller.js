@@ -5,14 +5,14 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import bcrypt from "bcrypt"
 
 export const approveUser = asyncHandler(async (req, res) => {
- 
+ console.log("Here at")
   const caller = req.user;
-
+console.log("caller here",caller)
   const userId = Number(req.params.id);
   if (!userId || Number.isNaN(userId)) {
     throw new ApiError(400, "Invalid user id.");
   } 
-
+ 
   const target = await prisma.user.findUnique({
     where: { id: userId },
     select: { id: true, email: true, fullName: true, role: true, status: true, createdAt: true, updatedAt: true },

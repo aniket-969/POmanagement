@@ -28,7 +28,7 @@ export const getUserByEmail = async (email) => {
 
 const createAccessToken = (payload) => {
   const secret = process.env.ACCESS_TOKEN_SECRET;
-  const expiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN || "15m";
+  const expiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN || "1d";
   return jwt.sign(payload, secret, { expiresIn });
 };
 

@@ -6,7 +6,7 @@ import { validate } from '../middleware/validator.js';
 import { registerSchema } from "../zod/user.schema.js";
 
 const router = Router()
-
+ 
 router.use(verifyJWT,verifyAdmin)
 router.route("/:id/approve").patch(approveUser)
 router.route("/:id/reject").patch(rejectUser)

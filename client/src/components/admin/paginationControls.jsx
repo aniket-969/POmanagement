@@ -1,8 +1,14 @@
+import { Box, Pagination, Stack } from '@mui/material'
 import React from 'react'
 
 const PaginationControls = () => {
   return (
-    <div>PaginationControls</div>
+   
+      <Pagination count={10} variant="outlined" size='large' sx={{
+        display:'flex',
+        justifyContent:"center"
+      }}/>
+    
   )
 }
 

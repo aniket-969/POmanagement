@@ -22,7 +22,8 @@ const PendingTable = ({ pendingData }) => {
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>email</TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell align="right">Actions</TableCell>
+            <TableCell align="righ"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -39,7 +40,7 @@ const PendingTable = ({ pendingData }) => {
                 <ApproveUser id={row.id}/>
               </TableCell>
 
-              <TableCell align="right">
+              <TableCell align="righ">
                 <RejectUser id={row.id}/>
               </TableCell>
             </TableRow>
