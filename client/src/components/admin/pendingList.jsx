@@ -27,7 +27,6 @@ const PendingList = () => {
     return <>Something went wrong, refresh</>;
   }
 
-
   const apiResp = data?.data ?? data; 
   const payload = apiResp?.data ?? apiResp; 
   const list = payload?.data ?? [];
