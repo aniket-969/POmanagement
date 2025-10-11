@@ -32,7 +32,7 @@ const CreatePoForm = ({ handleClose }) => {
 
       const payload = {
         title: data.title,
-        description: data.description === "" ? null : data.description,
+        description: data.description,
         total_amount,
       };
 

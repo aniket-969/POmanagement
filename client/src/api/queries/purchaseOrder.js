@@ -4,7 +4,6 @@ const base = "purchaseOrder";
 
 export const createPurchaseOrder = (data) => {
   console.log(data)
-  return
   return axiosClient.post(`/${base}`, data);
 };
 
