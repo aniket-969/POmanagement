@@ -16,8 +16,18 @@ export const createApprover = (data) => {
   return axiosClient.post(`/${base}/approver`, data);
 };
 
-export const getPendingCreators = () => {
-  console.log("called")
- 
-  return axiosClient.get(`/${base}/creators`);
+export const getPendingCreators = ({ queryKey }) => {
+  
+  const [, , params] = queryKey;
+  console.log(params)
+  const { q = "", page = 1, limit = 5 } = params || {};
+
+  return axiosClient.get(`/${base}/creators`, {
+    params: {
+      q: q || undefined,
+      page,
+      limit,
+    },
+  });
 };
+

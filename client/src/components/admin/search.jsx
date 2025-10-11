@@ -1,38 +1,51 @@
-import { useState, useCallback } from "react";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton"; 
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useState, useCallback, useEffect } from "react";
+import { Box, OutlinedInput, InputAdornment, IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
-import {useDebouncedCallback} from "../../hooks/useDebounce.jsx"
+import { useDebouncedCallback } from './../../hooks/useDebounce';
 
-export default function SearchInput({ onSearch, placeholder = "Search users..." }) {
-  const [value, setValue] = useState("");
+export default function DebugSearchInput({
+  onSearch,
+  placeholder = "Search users...",
+  initialValue = "",
+  delay = 300,
+}) {
+  const [value, setValue] = useState(initialValue ?? "");
 
-  const debounced = useDebouncedCallback((q) => {
-    onSearch?.(q);
-  }, 300);
+  useEffect(() => {
+    setValue(initialValue ?? "");
+  }, [initialValue]);
+
+  const debouncedSearch = useDebouncedCallback((query) => {
+    // console.log(`[debounced] fired at ${performance.now().toFixed(1)} ms with: "${query}"`);
+    onSearch?.(query);
+  }, delay);
+
+  useEffect(() => {
+    return () => debouncedSearch.cancel();
+  }, [debouncedSearch]);
 
   const handleChange = useCallback((e) => {
-    const v = e.target.value;
-    setValue(v);
-    debounced(v);
-    console.log(v)
-  }, [debounced]);
+    const newValue = e.target.value;
+    setValue(newValue);
+    // console.log(`[handleChange] typed at ${performance.now().toFixed(1)} ms: "${newValue}"`);
+    debouncedSearch(newValue);
+  }, [debouncedSearch]);
 
   const handleClear = useCallback(() => {
+    debouncedSearch.cancel();
     setValue("");
-    onSearch?.(""); 
-  }, [onSearch]);
+    // console.log(`[handleClear] cleared at ${performance.now().toFixed(1)} ms`);
+    onSearch?.("");
+  }, [debouncedSearch, onSearch]);
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === "Enter") {
-     
-      debounced.cancel?.();
+      debouncedSearch.cancel();
+      // console.log(`[enter] immediate search at ${performance.now().toFixed(1)} ms: "${value}"`);
       onSearch?.(value);
     }
-  }, [value, onSearch, debounced]);
+  }, [value, onSearch, debouncedSearch]);
 
   return (
     <Box sx={{ minWidth: 280 }}>
@@ -50,10 +63,10 @@ export default function SearchInput({ onSearch, placeholder = "Search users..." 
         endAdornment={
           value ? (
             <InputAdornment position="end">
-              <IconButton
-                onClick={handleClear}
-                aria-label="Clear search"
-                edge="end"
+              <IconButton 
+                onClick={handleClear} 
+                aria-label="Clear search" 
+                edge="end" 
                 size="small"
               >
                 <CloseIcon fontSize="small" />
@@ -61,9 +74,7 @@ export default function SearchInput({ onSearch, placeholder = "Search users..." 
             </InputAdornment>
           ) : null
         }
-        inputProps={{
-          "aria-label": "Search users",
-        }}
+        inputProps={{ "aria-label": "Search users" }}
         fullWidth
       />
     </Box>

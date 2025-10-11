@@ -1,23 +1,29 @@
- import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
   approveUser,
-  createApprover, 
+  createApprover,
   getPendingCreators,
   rejectUser,
 } from "../api/queries/admin";
+import { useSearchParams } from "react-router-dom";
 
 export const useAdmin = () => {
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const q = searchParams.get("q") ?? "";
+  const page = Number(searchParams.get("page") ?? 1);
+  const limit = Number(searchParams.get("limit") ?? 5);
+  console.log(q, page, limit);
 
   const pendingCreatorsQuery = useQuery({
-    queryKey: ["admin", "pending-creators"],
+    queryKey: ["admin", "pending-creators", { q, page, limit }],
     queryFn: getPendingCreators,
     refetchOnWindowFocus: false,
-    staleTime: 30 * 60 * 1000, 
+    staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
-    enabled:true 
-  }); 
+    enabled: true,
+  });
 
   const approveMutation = useMutation({
     mutationFn: ({ id }) => approveUser(id),
@@ -34,7 +40,7 @@ export const useAdmin = () => {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id}) => rejectUser(id),
+    mutationFn: ({ id }) => rejectUser(id),
     onSuccess: () => {
       toast.success("User approved successfully!");
       queryClient.invalidateQueries(["admin", "pending-creators"]);
@@ -59,13 +65,13 @@ export const useAdmin = () => {
       toast.error(message);
       console.error("Create approver error:", error);
     },
-  }); 
+  });
 
   return {
     pendingCreatorsQuery,
     approveMutation,
     createApproverMutation,
-    rejectMutation
+    rejectMutation,
   };
 };
 

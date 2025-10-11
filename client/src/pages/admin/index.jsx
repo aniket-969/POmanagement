@@ -6,7 +6,7 @@ const Admin = () => {
   return (
     <Box sx={{
         p:2,
-        display:"flex",
+        display:"flex", 
         flexDirection:"column",
         gap:4,
     }}>

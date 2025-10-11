@@ -9,11 +9,12 @@ import Paper from "@mui/material/Paper";
 import ApproveUser from "./approveUser";
 import RejectUser from "./rejectUser";
 
+
 const PendingTable = ({ pendingData }) => {
   console.log(pendingData);
 
   if (pendingData.length === 0)
-    return <EmptyState message="No pending users." />;
+    return <p>No users to show</p>;
 
   return (
     <TableContainer component={Paper}>

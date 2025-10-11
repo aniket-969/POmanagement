@@ -1,21 +1,34 @@
 import { useRef, useEffect, useCallback } from "react";
 
 export function useDebouncedCallback(callback, delay) {
+  const callbackRef = useRef(callback);
   const timer = useRef(null);
+
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  const cancel = useCallback(() => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  }, []);
 
   const debounced = useCallback(
     (...args) => {
-      if (timer.current) clearTimeout(timer.current);
+      cancel();
       timer.current = setTimeout(() => {
-        callback(...args);
+        callbackRef.current(...args);
+        timer.current = null;
       }, delay);
     },
-    [callback, delay]
+    [delay, cancel]
   );
 
   useEffect(() => {
-    return () => clearTimeout(timer.current);
-  }, []);
+    return () => cancel();
+  }, [cancel]);
 
-  return debounced;
+  return Object.assign(debounced, { cancel });
 }
