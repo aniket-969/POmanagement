@@ -7,8 +7,9 @@ export const createPurchaseOrder = (data) => {
   return axiosClient.post(`/${base}`, data);
 };
 
-export const getAllPurchaseOrders = () => {
-  return axiosClient.get(`/${base}`);
+export const getAllPurchaseOrders = ({queryKey}) => {
+  const [,params] = queryKey
+  return axiosClient.get(`/${base}`,{params});
 };
 
 export const getPurchaseOrderById = (id) => {

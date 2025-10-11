@@ -1,126 +1,152 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    createPurchaseOrder,
-    getAllPurchaseOrders,
-    getPurchaseOrderById,
-    submitPurchaseOrder,
-    getApproverOrders,
-    approvePurchaseOrder,
-    rejectPurchaseOrder,
+  createPurchaseOrder,
+  getAllPurchaseOrders,
+  getPurchaseOrderById,
+  submitPurchaseOrder,
+  getApproverOrders,
+  approvePurchaseOrder,
+  rejectPurchaseOrder,
 } from "../api/queries/purchaseOrder.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+
+const DEFAULTS = {
+  page: 1,
+  limit: 10,
+  q: "",
+  status: "",
+  sortBy: "createdAt",
+  sortOrder: "desc",
+};
 
 export const usePO = () => {
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-    const poListQuery = useQuery({
-        queryKey: ["pos"],
-        queryFn: ({ queryKey }) => {
-            const params = queryKey[1] ?? {};
-            return getAllPurchaseOrders(params);
-        },
-        enabled: true,
-        refetchOnWindowFocus: false,
-        staleTime: 30 * 60 * 1000,
-        cacheTime: 60 * 60 * 1000,
+  const queryClient = useQueryClient();
+
+  const [searchParams] = useSearchParams();
+
+  const q = searchParams.get("q") ?? DEFAULTS.q;
+  const page = Number(searchParams.get("page") ?? DEFAULTS.page);
+  const limit = Number(searchParams.get("limit") ?? DEFAULTS.limit);
+  const status = searchParams.get("status") ?? DEFAULTS.status;
+  const sortBy = searchParams.get("sortBy") ?? DEFAULTS.sortBy;
+  const sortOrder = searchParams.get("sortOrder") ?? DEFAULTS.sortOrder;
+
+  const params = {
+    q: q || undefined,
+    page: Number.isFinite(page) ? page : DEFAULTS.page,
+    limit: Number.isFinite(limit) ? limit : DEFAULTS.limit,
+    status: status || undefined,
+    sortBy,
+    sortOrder,
+  };
+
+  const poListQuery = useQuery({
+    queryKey: ["pos", params],
+    queryFn:  getAllPurchaseOrders,
+    enabled: true,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+  });
+
+  const poQuery = (poId) =>
+    useQuery({
+      queryKey: ["po", poId],
+      queryFn: () => getPurchaseOrderById(poId),
+      refetchOnWindowFocus: false,
+      staleTime: 30 * 60 * 1000,
+      cacheTime: 60 * 60 * 1000,
+      enabled: !!poId,
     });
 
-    const poQuery = (poId) =>
-        useQuery({
-            queryKey: ["po", poId],
-            queryFn: () => getPurchaseOrderById(poId),
-            refetchOnWindowFocus: false,
-            staleTime: 30 * 60 * 1000,
-            cacheTime: 60 * 60 * 1000,
-            enabled: !!poId,
-        });
+  const approverListQuery = useQuery({
+    queryKey: ["approver", "pos"],
+    queryFn: ({ queryKey }) => {
+      const params = queryKey[1] ?? {};
+      return getApproverOrders(params);
+    },
+    enabled: false,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+  });
 
-    const approverListQuery = useQuery({
-        queryKey: ["approver", "pos"],
-        queryFn: ({ queryKey }) => {
-            const params = queryKey[1] ?? {};
-            return getApproverOrders(params);
-        },
-        enabled: false,
-        refetchOnWindowFocus: false,
-        staleTime: 30 * 60 * 1000,
-        cacheTime: 60 * 60 * 1000,
-    });
+  const createMutation = useMutation({
+    mutationFn: createPurchaseOrder,
+    onSuccess: (data) => {
+      toast("Purchase order created");
+      queryClient.invalidateQueries(["pos"]);
+      const created = data?.data?.data;
+      if (created?.id) {
+        navigate(`/po/${created.id}`);
+      }
+    },
+    onError: (error) => {
+      toast(error?.response?.data?.message || "Failed to create PO");
+      console.error("Create PO error:", error);
+    },
+  });
 
-    const createMutation = useMutation({
-        mutationFn: createPurchaseOrder,
-        onSuccess: (data) => {
-            toast("Purchase order created");
-            queryClient.invalidateQueries(["pos"]);
-            const created = data?.data?.data;
-            if (created?.id) {
-                navigate(`/po/${created.id}`);
-            }
-        },
-        onError: (error) => {
-            toast(error?.response?.data?.message || "Failed to create PO");
-            console.error("Create PO error:", error);
-        },
-    });
+  const submitMutation = useMutation({
+    mutationFn: ({ id }) => submitPurchaseOrder(id),
+    onSuccess: (_, variables) => {
+      toast("Purchase order submitted");
+      queryClient.invalidateQueries(["pos"]);
+      if (variables?.id) queryClient.invalidateQueries(["po", variables.id]);
+    },
+    onError: (error) => {
+      toast(error?.response?.data?.message || "Failed to submit PO");
+      console.error("Submit PO error:", error);
+    },
+  });
 
-    const submitMutation = useMutation({
-        mutationFn: ({ id }) => submitPurchaseOrder(id),
-        onSuccess: (_, variables) => {
-            toast("Purchase order submitted");
-            queryClient.invalidateQueries(["pos"]);
-            if (variables?.id) queryClient.invalidateQueries(["po", variables.id]);
-        },
-        onError: (error) => {
-            toast(error?.response?.data?.message || "Failed to submit PO");
-            console.error("Submit PO error:", error);
-        },
-    });
+  const approveMutation = useMutation({
+    mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
+    onSuccess: (_, variables) => {
+      toast("Purchase order approved");
+      queryClient.invalidateQueries(["pos"]);
+      queryClient.invalidateQueries(["approver-pos"]);
+      if (variables?.id) {
+        queryClient.invalidateQueries(["po", variables.id]);
+        queryClient.invalidateQueries(["po-history", variables.id]);
+      }
+    },
+    onError: (error) => {
+      toast(error?.response?.data?.message || "Failed to approve PO");
+      console.error("Approve PO error:", error);
+    },
+  });
 
-    const approveMutation = useMutation({
-        mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
-        onSuccess: (_, variables) => {
-            toast("Purchase order approved");
-            queryClient.invalidateQueries(["pos"]);
-            queryClient.invalidateQueries(["approver-pos"]);
-            if (variables?.id) {
-                queryClient.invalidateQueries(["po", variables.id]);
-                queryClient.invalidateQueries(["po-history", variables.id]);
-            }
-        },
-        onError: (error) => {
-            toast(error?.response?.data?.message || "Failed to approve PO");
-            console.error("Approve PO error:", error);
-        },
-    });
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, data }) => rejectPurchaseOrder(id, data),
+    onSuccess: (_, variables) => {
+      toast("Purchase order rejected");
+      queryClient.invalidateQueries(["pos"]);
+      queryClient.invalidateQueries(["approver-pos"]);
+      if (variables?.id) {
+        queryClient.invalidateQueries(["po", variables.id]);
+        queryClient.invalidateQueries(["po-history", variables.id]);
+      }
+    },
+    onError: (error) => {
+      toast(error?.response?.data?.message || "Failed to reject PO");
+      console.error("Reject PO error:", error);
+    },
+  });
 
-    const rejectMutation = useMutation({
-        mutationFn: ({ id, data }) => rejectPurchaseOrder(id, data),
-        onSuccess: (_, variables) => {
-            toast("Purchase order rejected");
-            queryClient.invalidateQueries(["pos"]);
-            queryClient.invalidateQueries(["approver-pos"]);
-            if (variables?.id) {
-                queryClient.invalidateQueries(["po", variables.id]);
-                queryClient.invalidateQueries(["po-history", variables.id]);
-            }
-        },
-        onError: (error) => {
-            toast(error?.response?.data?.message || "Failed to reject PO");
-            console.error("Reject PO error:", error);
-        },
-    });
-
-    return {
-        poListQuery,
-        poQuery,
-        approverListQuery,
-        createMutation,
-        submitMutation,
-        approveMutation,
-        rejectMutation,
-    };
+  return {
+    poListQuery,
+    poQuery,
+    approverListQuery,
+    createMutation,
+    submitMutation,
+    approveMutation,
+    rejectMutation,
+  };
 };
 
 export default usePO;
