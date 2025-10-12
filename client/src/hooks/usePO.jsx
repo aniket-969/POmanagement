@@ -46,7 +46,7 @@ export const usePO = () => {
 
   const poListQuery = useQuery({
     queryKey: ["pos", params],
-    queryFn:  getAllPurchaseOrders,
+    queryFn: getAllPurchaseOrders,
     enabled: true,
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
@@ -54,14 +54,14 @@ export const usePO = () => {
   });
 
   const approverListQuery = useQuery({
-    queryKey: ["approver", "pos",params],
+    queryKey: ["approver", "pos", params],
     queryFn: getApproverOrders,
     enabled: true,
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
   });
- 
+
   const poQuery = (poId) =>
     useQuery({
       queryKey: ["po", poId],
@@ -105,12 +105,7 @@ export const usePO = () => {
     mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
     onSuccess: (_, variables) => {
       toast("Purchase order approved");
-      queryClient.invalidateQueries(["pos"]);
-      queryClient.invalidateQueries(["approver-pos"]);
-      if (variables?.id) {
-        queryClient.invalidateQueries(["po", variables.id]);
-        queryClient.invalidateQueries(["po-history", variables.id]);
-      }
+      queryClient.invalidateQueries(["approver", "pos"]);
     },
     onError: (error) => {
       toast(error?.response?.data?.message || "Failed to approve PO");
@@ -122,12 +117,7 @@ export const usePO = () => {
     mutationFn: ({ id, data }) => rejectPurchaseOrder(id, data),
     onSuccess: (_, variables) => {
       toast("Purchase order rejected");
-      queryClient.invalidateQueries(["pos"]);
-      queryClient.invalidateQueries(["approver-pos"]);
-      if (variables?.id) {
-        queryClient.invalidateQueries(["po", variables.id]);
-        queryClient.invalidateQueries(["po-history", variables.id]);
-      }
+      queryClient.invalidateQueries(["approver", "pos"]);
     },
     onError: (error) => {
       toast(error?.response?.data?.message || "Failed to reject PO");

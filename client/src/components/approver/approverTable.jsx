@@ -17,8 +17,9 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PoHistory from './../poHIstory';
+import Reject from "./reject";
+import Approve from "./approve";
 
-// helper - adjust to your project utils
 const copyToClipboard = (text) => {
   try {
     navigator.clipboard.writeText(text);
@@ -33,17 +34,14 @@ const ApproverTable = ({ data = [] }) => {
 
   console.log(data);
 
-  const handleApprove = (po) => {
-    // Hardcoded UI behavior — no API calls
-    setLocalStatus((s) => ({ ...s, [po.id]: "approved" }));
+  const handleApprove = (poId) => {
+    console.log(poId)
   };
 
-  const handleReject = (po) => {
-    // Hardcoded UI behavior — no API calls
-    setLocalStatus((s) => ({ ...s, [po.id]: "rejected" }));
+  const handleReject = (poId) => {
+   console.log(poId)
   };
 
-  const effectiveStatus = (po) => (localStatus[po.id] ?? po.status ?? "unknown").toString();
 
   return (
     <TableContainer component={Paper}>
@@ -52,7 +50,7 @@ const ApproverTable = ({ data = [] }) => {
           <TableRow>
             <TableCell sx={{ width: 140 }}>PO #</TableCell>
             <TableCell>Purchase order</TableCell>
-            {/* No Status column per request */}
+           
             <TableCell align="right" sx={{ width: 240 }}>
               Actions
             </TableCell>
@@ -64,10 +62,10 @@ const ApproverTable = ({ data = [] }) => {
             const isSubmitting = submittingIds.has(po.id);
             const title = po.title ?? "Untitled";
             const desc = po.description ?? "";
-            const status = effectiveStatus(po);
+            const status = po.status
 
             const showActionButtons = status === "submitted";
-            const showStatusChip = !showActionButtons; // approved / rejected / unknown -> show status
+            const showStatusChip = !showActionButtons; 
 
             return (
               <TableRow key={po.id} hover>
@@ -124,30 +122,13 @@ const ApproverTable = ({ data = [] }) => {
                 <TableCell align="right">
                   <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
                     {showActionButtons ? (
-                      // If status is submitted -> show Approve / Reject
+                     
                       <>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          onClick={() => handleApprove(po)}
-                          disabled={isSubmitting}
-                          aria-label={`Approve PO ${po.poNumber}`}
-                        >
-                          Approve
-                        </Button>
-
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          onClick={() => handleReject(po)}
-                          disabled={isSubmitting}
-                          aria-label={`Reject PO ${po.poNumber}`}
-                        >
-                          Reject
-                        </Button>
+                    <Approve poId = {po.id}/>
+                    <Reject poId = {po.id}/>
                       </>
                     ) : (
-                      // approved/rejected/unknown -> show status chip instead of buttons
+                     
                       <Chip
                         label={String(status).charAt(0).toUpperCase() + String(status).slice(1)}
                         size="small"

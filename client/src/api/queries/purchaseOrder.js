@@ -28,6 +28,7 @@ export const submitPurchaseOrder = (id) => {
 
 
 export const approvePurchaseOrder = (id, data) => {
+  console.log(id,data)
   return axiosClient.patch(`/${base}/approver/${id}/approve`, data);
 };
 
