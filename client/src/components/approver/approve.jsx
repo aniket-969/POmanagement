@@ -15,7 +15,6 @@ const Approve = ( {poId}) => {
     
   const [open, setOpen] = React.useState(false);
   const [comment, setComment] = React.useState("");
- const [error,setError] = React.useState(false)
 const {approveMutation} = usePO()
 
   const openModal = () => setOpen(true);
@@ -27,9 +26,7 @@ const {approveMutation} = usePO()
   };
 
   const handleConfirm = () => {
-   if(comment ===""){setError(true)
-    return
-   }
+   
       console.log("Approved", { poId, comment });
       approveMutation.mutateAsync({id:poId,data:{comment}})
     closeModal();
@@ -63,9 +60,7 @@ const {approveMutation} = usePO()
             Confirm
           </Button>
         </DialogActions>
-        {error && <Typography sx={{
-            color:"red",
-        }}>Comment is mandatory</Typography>}
+      
       </Dialog>
     </>
   );
