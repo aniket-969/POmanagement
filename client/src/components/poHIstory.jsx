@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Box,
   Paper,
@@ -20,10 +20,11 @@ import {
   CircularProgress,
   Stack,
 } from "@mui/material";
-import InfoIcon  from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 
-const PoHistory = ({ po, history = [] }) => {const [open, setOpen] = React.useState(false);
-console.log(history)
+const PoHistory = ({ po, history = [] }) => {
+  const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -60,6 +61,16 @@ console.log(history)
                   h.userId ||
                   "Unknown";
                 const ts = h.createdAt || h.timestamp || h.created_at;
+
+                // pick up a separate comment field if present
+                const comment =
+                  h.comment ?? h.reviewComment ?? h.commentText ?? null;
+
+                const hasAnyComment = Boolean(
+                  (h.description && String(h.description).trim()) ||
+                    (comment && String(comment).trim())
+                );
+
                 return (
                   <Paper
                     key={h.id ?? `${h.action}-${ts ?? Math.random()}`}
@@ -80,15 +91,25 @@ console.log(history)
                         </Typography>
                       </Box>
 
-                      {h.description ? (
-                        <Box sx={{ ml: 2, maxWidth: "60%" }}>
-                          <Typography variant="body2">
+                      {/* Combined comment area: description (if any) then separate comment (if any) */}
+                      <Box sx={{ ml: 2, maxWidth: "60%" }}>
+                        {h.description && String(h.description).trim() ? (
+                          <Typography variant="body2" sx={{ mb: comment ? 1 : 0 }}>
                             {h.description}
                           </Typography>
-                        </Box>
-                      ) : <Typography variant="body2">
-                            No comments available
-                          </Typography>}
+                        ) : null}
+
+                        {comment && String(comment).trim() ? (
+                          <Typography variant="body2" color="text.secondary">
+                            {comment}
+                          </Typography>
+                        ) : null}
+
+                        {/* If neither exists, show the fallback */}
+                        {!hasAnyComment && (
+                          <Typography variant="body2">No comments available</Typography>
+                        )}
+                      </Box>
                     </Stack>
                   </Paper>
                 );
@@ -105,6 +126,6 @@ console.log(history)
       </Dialog>
     </>
   );
-}
+};
 
-export default PoHistory
+export default PoHistory;
