@@ -23,6 +23,7 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PoHistory from "../poHistory";
+import usePO from "../../hooks/usePO";
 
 const formatCurrency = (value) => {
   if (value == null || value === "") return "—";
@@ -41,7 +42,7 @@ export default function POListTable({
   data = [],
   canSubmit = (po) => po?.status === "draft",
 }) {
- 
+ const {submitMutation}= usePO()
   const [submittingIds, setSubmittingIds] = React.useState(new Set());
   
   const [localStatus, setLocalStatus] = React.useState({});
@@ -54,27 +55,9 @@ export default function POListTable({
     }
   };
 
-  const submitForReview = async (po) => {
-    if (!po || !po.id) return;
-    setSubmittingIds((s) => new Set(s).add(po.id));
-
-    if (typeof onSubmitForReview === "function") {
-      // call parent handler if provided (parent handles API + refetch)
-      try {
-        await onSubmitForReview(po.id);
-      } catch (err) {
-        console.error("submit failed", err);
-      } finally {
-        setSubmittingIds((s) => {
-          const next = new Set(s);
-          next.delete(po.id);
-          return next;
-        });
-      }
-      return;
-    }
-
-   
+  const submitForReview = async (poId) => {
+     
+await submitMutation.mutateAsync(poId)
    
   };
 
@@ -162,13 +145,13 @@ export default function POListTable({
                     </Typography>
                   </Box>
 
-                  <Typography
+                  {/* <Typography
                     variant="subtitle2"
                     sx={{ float: "right", fontWeight: 700, mt: 0.5 }}
                     title={formatCurrency(amount)}
                   >
                     {formatCurrency(amount)}
-                  </Typography>
+                  </Typography> */}
                 </TableCell>
 
                 <TableCell>
@@ -196,7 +179,7 @@ export default function POListTable({
                       <Button
                         variant="contained"
                         size="small"
-                        onClick={() => submitForReview(po)}
+                        onClick={() => submitForReview(po?.id)}
                         disabled={isSubmitting}
                         aria-label={`Submit PO ${po.poNumber} for review`}
                         startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}

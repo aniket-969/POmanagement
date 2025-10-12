@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import SearchInput from './search'
+import SearchInput from '../ui/search'
 import CreateApprover from './createApprover'
 import {useSearchParams} from "react-router-dom"
 

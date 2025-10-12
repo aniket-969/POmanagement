@@ -92,11 +92,11 @@ export const usePO = () => {
   });
 
   const submitMutation = useMutation({
-    mutationFn: ({ id }) => submitPurchaseOrder(id),
+    mutationFn: (id) => submitPurchaseOrder(id),
     onSuccess: (_, variables) => {
       toast("Purchase order submitted");
       queryClient.invalidateQueries(["pos"]);
-      if (variables?.id) queryClient.invalidateQueries(["po", variables.id]);
+      queryClient.invalidateQueries(["pos"]);
     },
     onError: (error) => {
       toast(error?.response?.data?.message || "Failed to submit PO");

@@ -17,6 +17,7 @@ export const getPurchaseOrderById = (id) => {
 };
 
 export const submitPurchaseOrder = (id) => {
+  console.log(id)
   return axiosClient.patch(`/${base}/${id}/submit`);
 };
 
