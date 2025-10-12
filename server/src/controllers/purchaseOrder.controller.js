@@ -267,7 +267,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
   const totalCount = await prisma.purchaseOrder.count({ where });
   const totalPages = Math.max(1, Math.ceil(totalCount / limit));
 
-  const data = await prisma.purchaseOrder.findMany({
+    const data = await prisma.purchaseOrder.findMany({
     where,
     orderBy: { createdAt: "desc" },
     skip,
@@ -276,6 +276,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
       id: true,
       poNumber: true,
       title: true,
+      description: true,
       totalAmount: true,
       status: true,
       createdAt: true,
@@ -283,8 +284,22 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
       reviewedAt: true,
       createdBy: { select: { id: true, fullName: true, email: true } },
       reviewedBy: { select: { id: true, fullName: true, email: true } },
+
+      poHistory: {
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          action: true,
+          description: true,
+          comment: true,
+          createdAt: true,
+          user: { select: { id: true, fullName: true, email: true } },
+        },
+      },
     },
   });
+
 
   return res.status(200).json(new ApiResponse(200, {
     data, page, limit, totalCount, totalPages
@@ -326,7 +341,6 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
   }
 
   if (q) {
-  
     where.OR = [
       { title: { contains: q, mode: "insensitive" } },
       { poNumber: { contains: q, mode: "insensitive" } },
@@ -352,8 +366,22 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
       reviewedAt: true,
       createdBy: { select: { id: true, fullName: true, email: true } },
       reviewedBy: { select: { id: true, fullName: true, email: true } },
+
+      // <-- include poHistory here (recent first), and include the user who made the history entry
+      poHistory: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          action: true,
+          description: true,
+          comment: true,
+          createdAt: true,
+          user: { select: { id: true, fullName: true, email: true } },
+        },
+      },
     },
   });
 
   return res.status(200).json(new ApiResponse(200, { data, page, limit, totalCount, totalPages }, "Approver orders fetched"));
 });
+

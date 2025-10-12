@@ -21,7 +21,7 @@ const ApproverList = () => {
   if (isError) {
     return <>Something went wrong, refresh</>;
   }
-  console.log(data);
+//   console.log(data);
   const apiResp = data?.data?.data;
   const payload = apiResp?.data;
   const currentPage = apiResp?.page;
