@@ -23,7 +23,7 @@ import {
 import InfoIcon  from '@mui/icons-material/Info';
 
 const PoHistory = ({ po, history = [] }) => {const [open, setOpen] = React.useState(false);
-
+console.log(history)
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -80,13 +80,15 @@ const PoHistory = ({ po, history = [] }) => {const [open, setOpen] = React.useSt
                         </Typography>
                       </Box>
 
-                      {h.comment || h.description ? (
+                      {h.description ? (
                         <Box sx={{ ml: 2, maxWidth: "60%" }}>
                           <Typography variant="body2">
-                            {h.comment ?? h.description}
+                            {h.description}
                           </Typography>
                         </Box>
-                      ) : null}
+                      ) : <Typography variant="body2">
+                            No comments available
+                          </Typography>}
                     </Stack>
                   </Paper>
                 );

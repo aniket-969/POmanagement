@@ -9,14 +9,14 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import usePO from "../../hooks/usePO";
+import usePO, { useApproverPO } from "../../hooks/usePO";
 
 const Reject = ({ poId }) => {
   const [open, setOpen] = React.useState(false);
-  const [comment, setComment] = React.useState("");
+  const [reviewComment, setComment] = React.useState("");
   const [error, setError] = React.useState(false);
 
-  const { rejectMutation } = usePO();
+  const { rejectMutation } = useApproverPO();
   const openModal = () => setOpen(true);
   const closeModal = () => {
     setOpen(false);
@@ -24,12 +24,12 @@ const Reject = ({ poId }) => {
   };
 
   const handleConfirm = () => {
-    if (comment === "") {
+    if (reviewComment === "") {
       setError(true);
       return;
     }
-    console.log("Rejected", { poId, comment });
-    rejectMutation.mutateAsync({ id: poId, data: { comment } });
+    console.log("Rejected", { poId, reviewComment });
+    rejectMutation.mutateAsync({ id: poId, data: { reviewComment } });
     closeModal();
   };
 
@@ -59,10 +59,10 @@ const Reject = ({ poId }) => {
             multiline
             minRows={4}
             fullWidth
-            placeholder="Add a comment"
-            value={comment}
+            placeholder="Add a reviewComment"
+            value={reviewComment}
             onChange={(e) => setComment(e.target.value)}
-            aria-label="approval-comment"
+            aria-label="approval-reviewComment"
           />
         </DialogContent>
 

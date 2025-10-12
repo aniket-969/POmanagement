@@ -138,9 +138,8 @@ export const approvePurchaseOrder = asyncHandler(async (req, res) => {
         poId: upd.id,
         userId: user.id,
         action: "approved",
-        description: reviewComment
-          ? `Approved by user ${user.id}: ${reviewComment}`
-          : `Approved by user ${user.id}`,
+        comment:reviewComment,
+        description:`Approved by user ${user.id}`,
       },
     });
 
@@ -187,9 +186,8 @@ export const rejectPurchaseOrder = asyncHandler(async (req, res) => {
         poId: upd.id,
         userId: user.id,
         action: "rejected",
-        description: reviewComment
-          ? `Rejected by user ${user.id}: ${reviewComment}`
-          : `Rejected by user ${user.id}`,
+        comment:reviewComment,
+        description:`Rejected by user ${user.id}`,
       },
     });
 

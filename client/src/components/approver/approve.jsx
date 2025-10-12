@@ -9,26 +9,25 @@ import { toast } from 'react-toastify';
   DialogActions,
   TextField,
 } from "@mui/material";
-import usePO from "../../hooks/usePO";
+import { useApproverPO } from "../../hooks/usePO";
 
 const Approve = ( {poId}) => {
     
   const [open, setOpen] = React.useState(false);
-  const [comment, setComment] = React.useState("");
-const {approveMutation} = usePO()
+  const [reviewComment, setComment] = React.useState("");
+const {approveMutation} = useApproverPO()
 
   const openModal = () => setOpen(true);
 
   const closeModal = () => {
     setOpen(false);
     setComment(""); 
-    setError(false)
   };
 
   const handleConfirm = () => {
    
-      console.log("Approved", { poId, comment });
-      approveMutation.mutateAsync({id:poId,data:{comment}})
+      console.log("Approved", { poId, reviewComment });
+      approveMutation.mutateAsync({id:poId,data:{reviewComment}})
     closeModal();
   };
 
@@ -47,10 +46,10 @@ const {approveMutation} = usePO()
             multiline
             minRows={4}
             fullWidth
-            placeholder="Add a comment"
-            value={comment}
+            placeholder="Add a reviewComment"
+            value={reviewComment}
             onChange={(e) => setComment(e.target.value)}
-            aria-label="approval-comment"
+            aria-label="approval-reviewComment"
           />
         </DialogContent>
 

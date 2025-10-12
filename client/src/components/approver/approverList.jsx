@@ -1,5 +1,5 @@
 import React from "react";
-import usePO from "../../hooks/usePO";
+import { useApproverPO } from "../../hooks/usePO";
 import { Box } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import PaginationControls from "../admin/paginationControls";
@@ -7,7 +7,7 @@ import ApproverTable from "./approverTable";
 
 const ApproverList = () => {
 
-  const { approverListQuery } = usePO();
+  const { approverListQuery } = useApproverPO();
   const { data, isLoading, isError } = approverListQuery;
 //   console.log(approverListQuery);
 

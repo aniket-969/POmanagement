@@ -53,15 +53,6 @@ export const usePO = () => {
     cacheTime: 60 * 60 * 1000,
   });
 
-  const approverListQuery = useQuery({
-    queryKey: ["approver", "pos", params],
-    queryFn: getApproverOrders,
-    enabled: true,
-    refetchOnWindowFocus: false,
-    staleTime: 30 * 60 * 1000,
-    cacheTime: 60 * 60 * 1000,
-  });
-
   const poQuery = (poId) =>
     useQuery({
       queryKey: ["po", poId],
@@ -101,7 +92,48 @@ export const usePO = () => {
     },
   });
 
-  const approveMutation = useMutation({
+ 
+
+  return {
+    poListQuery,
+    poQuery,
+    createMutation,
+    submitMutation,
+  };
+};
+
+export const useApproverPO = ()=>{
+  const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const [searchParams] = useSearchParams();
+
+  const q = searchParams.get("q") ?? DEFAULTS.q;
+  const page = Number(searchParams.get("page") ?? DEFAULTS.page);
+  const limit = Number(searchParams.get("limit") ?? DEFAULTS.limit);
+  const status = searchParams.get("status") ?? DEFAULTS.status;
+  const sortBy = searchParams.get("sortBy") ?? DEFAULTS.sortBy;
+  const sortOrder = searchParams.get("sortOrder") ?? DEFAULTS.sortOrder;
+
+  const params = {
+    q: q || undefined,
+    page: Number.isFinite(page) ? page : DEFAULTS.page,
+    limit: Number.isFinite(limit) ? limit : DEFAULTS.limit,
+    status: status || undefined,
+    sortBy,
+    sortOrder,
+  };
+
+  const approverListQuery = useQuery({
+    queryKey: ["approver", "pos", params],
+    queryFn: getApproverOrders,
+    enabled: true,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+  });
+   const approveMutation = useMutation({
     mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
     onSuccess: (_, variables) => {
       toast("Purchase order approved");
@@ -124,16 +156,7 @@ export const usePO = () => {
       console.error("Reject PO error:", error);
     },
   });
-
-  return {
-    poListQuery,
-    poQuery,
-    approverListQuery,
-    createMutation,
-    submitMutation,
-    approveMutation,
-    rejectMutation,
-  };
-};
+  return {approverListQuery,approveMutation,rejectMutation}
+}
 
 export default usePO;
