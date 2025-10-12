@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import Topbar from '../../components/user/topbar';
 import DebugSearchInput from "../../components/admin/search"
 import PoTable from '../../components/user/poTable';
-import PaginationControls from '../../components/admin/paginationControls';
 import Filter from './../../components/ui/filter';
 
 const User = () => {
@@ -23,7 +22,7 @@ const User = () => {
    
       </Box>
         <PoTable/>
-      <PaginationControls/>
+      
       </Box>
   ) 
 }

@@ -142,7 +142,7 @@ const CreatePoForm = ({ handleClose }) => {
                 type="submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Creating..." : "Create PO"}
+                {isSubmitting ? "Creating..." : "Submit"}
               </Button>
             </Stack>
           </Stack>
