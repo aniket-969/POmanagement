@@ -53,6 +53,15 @@ export const usePO = () => {
     cacheTime: 60 * 60 * 1000,
   });
 
+  const approverListQuery = useQuery({
+    queryKey: ["approver", "pos",params],
+    queryFn: getApproverOrders,
+    enabled: true,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+  });
+ 
   const poQuery = (poId) =>
     useQuery({
       queryKey: ["po", poId],
@@ -62,18 +71,6 @@ export const usePO = () => {
       cacheTime: 60 * 60 * 1000,
       enabled: !!poId,
     });
-
-  const approverListQuery = useQuery({
-    queryKey: ["approver", "pos"],
-    queryFn: ({ queryKey }) => {
-      const params = queryKey[1] ?? {};
-      return getApproverOrders(params);
-    },
-    enabled: false,
-    refetchOnWindowFocus: false,
-    staleTime: 30 * 60 * 1000,
-    cacheTime: 60 * 60 * 1000,
-  });
 
   const createMutation = useMutation({
     mutationFn: createPurchaseOrder,

@@ -42,9 +42,9 @@ export default function POListTable({
   data = [],
   canSubmit = (po) => po?.status === "draft",
 }) {
- const {submitMutation}= usePO()
+  const { submitMutation } = usePO();
   const [submittingIds, setSubmittingIds] = React.useState(new Set());
-  
+
   const [localStatus, setLocalStatus] = React.useState({});
 
   const copyToClipboard = async (text) => {
@@ -56,9 +56,7 @@ export default function POListTable({
   };
 
   const submitForReview = async (poId) => {
-     
-await submitMutation.mutateAsync(poId)
-   
+    await submitMutation.mutateAsync(poId);
   };
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -92,13 +90,15 @@ await submitMutation.mutateAsync(poId)
             const title = po.title ?? "Untitled";
             const desc = po.description ?? "";
             const amount = po.totalAmount ?? po.total_amount ?? null;
-            const status = localStatus[po.id] ?? (po.status ?? "unknown");
+            const status = localStatus[po.id] ?? po.status ?? "unknown";
 
             return (
               <TableRow key={po.id} hover>
                 <TableCell>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <Typography sx={{ fontFamily: "monospace", fontWeight: 600 }}>
+                    <Typography
+                      sx={{ fontFamily: "monospace", fontWeight: 600 }}
+                    >
                       {po.poNumber}
                     </Typography>
 
@@ -156,7 +156,10 @@ await submitMutation.mutateAsync(poId)
 
                 <TableCell>
                   <Chip
-                    label={String(status).charAt(0).toUpperCase() + String(status).slice(1)}
+                    label={
+                      String(status).charAt(0).toUpperCase() +
+                      String(status).slice(1)
+                    }
                     size="small"
                     color={
                       status === "draft"
@@ -174,21 +177,32 @@ await submitMutation.mutateAsync(poId)
                 </TableCell>
 
                 <TableCell align="right">
-                  <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
-                    {canSubmit(po) && (status === "draft") ? (
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="flex-end"
+                    alignItems="center"
+                  >
+                    {canSubmit(po) && status === "draft" ? (
                       <Button
                         variant="contained"
                         size="small"
                         onClick={() => submitForReview(po?.id)}
                         disabled={isSubmitting}
                         aria-label={`Submit PO ${po.poNumber} for review`}
-                        startIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
+                        startIcon={
+                          isSubmitting ? (
+                            <CircularProgress size={16} color="inherit" />
+                          ) : null
+                        }
                       >
                         {isSubmitting ? "Submitting..." : "Submit for review"}
                       </Button>
                     ) : (
                       <Chip
-                        label={status === "submitted" ? "Submitted" : String(status)}
+                        label={
+                          status === "submitted" ? "Submitted" : String(status)
+                        }
                         size="small"
                         variant="outlined"
                         aria-hidden={false}
@@ -196,7 +210,10 @@ await submitMutation.mutateAsync(poId)
                     )}
 
                     {/* PoHistory component displays icon + modal; pass po and po.poHistory */}
-                    <PoHistory po={po} history={po.poHistory ?? po.po_history ?? []} />
+                    <PoHistory
+                      po={po}
+                      history={po.poHistory ?? po.po_history ?? []}
+                    />
                   </Stack>
                 </TableCell>
               </TableRow>

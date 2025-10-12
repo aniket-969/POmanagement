@@ -12,6 +12,14 @@ export const getAllPurchaseOrders = ({queryKey}) => {
   return axiosClient.get(`/${base}`,{params});
 };
 
+export const getApproverOrders = ({queryKey}) => {
+  const [,,params] = queryKey
+  console.log("jere")
+  const res = axiosClient.get(`/${base}/approver`,{params})
+  console.log(res)
+  return res;
+};
+
 export const getPurchaseOrderById = (id) => {
   return axiosClient.get(`/${base}/${id}`);
 };
@@ -21,9 +29,6 @@ export const submitPurchaseOrder = (id) => {
   return axiosClient.patch(`/${base}/${id}/submit`);
 };
 
-export const getApproverOrders = () => {
-  return axiosClient.get(`/${base}/approver`);
-};
 
 export const approvePurchaseOrder = (id, data) => {
   return axiosClient.patch(`/${base}/approver/${id}/approve`, data);
