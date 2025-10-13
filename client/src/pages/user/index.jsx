@@ -26,7 +26,9 @@ const User = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%" ,
+      p:2
+    }}>
       <Topbar />
 
       <Box

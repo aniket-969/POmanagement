@@ -3,6 +3,7 @@ import React from 'react'
 import SearchInput from '../ui/search'
 import CreateApprover from './createApprover'
 import {useSearchParams} from "react-router-dom"
+import Logout from '../logout'
 
 const Topbar = () => {
   const [searchParams,setSearchParams] = useSearchParams()
@@ -30,7 +31,14 @@ const onSearch = (q)=>{
   }}
 >
       <SearchInput onSearch = {onSearch}/>
-      <CreateApprover/>
+      <Box sx={{
+        display:"flex",
+        gap:3
+      }}>
+        <CreateApprover/>
+      <Logout/>
+      </Box>
+      
     </Box>
   )
 }

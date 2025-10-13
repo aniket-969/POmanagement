@@ -6,7 +6,7 @@ const POLayout = () => {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", }}>
       <Outlet />
     </Box>
   );
