@@ -110,7 +110,7 @@ const CreatePoForm = ({ handleClose }) => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Total amount"
+                  label="Total amount(in rupees)"
                   placeholder="Enter amount, e.g., 12500"
                   error={!!errors.total_amount}
                   helperText={
