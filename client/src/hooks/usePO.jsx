@@ -7,6 +7,7 @@ import {
   getApproverOrders,
   approvePurchaseOrder,
   rejectPurchaseOrder,
+  getApproverReviewedOrders,
 } from "../api/queries/purchaseOrder.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -103,7 +104,6 @@ export const usePO = () => {
 };
 
 export const useApproverPO = ()=>{
-  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
@@ -133,6 +133,16 @@ export const useApproverPO = ()=>{
     staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
   });
+
+  const approverReviewListQuery = useQuery({
+    queryKey: ["approver", "pos","review", params],
+    queryFn: getApproverReviewedOrders,
+    enabled: true,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+  });
+
    const approveMutation = useMutation({
     mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
     onSuccess: (_, variables) => {
@@ -156,7 +166,7 @@ export const useApproverPO = ()=>{
       console.error("Reject PO error:", error);
     },
   });
-  return {approverListQuery,approveMutation,rejectMutation}
+  return {approverListQuery,approveMutation,rejectMutation,approverReviewListQuery}
 }
 
 export default usePO;
