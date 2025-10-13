@@ -13,29 +13,20 @@ import {
   Tooltip,
   Button,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   CircularProgress,
   Stack,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import PoHistory from "../poHistory";
+import PoHistory from "../poHIstory";
 import usePO from "../../hooks/usePO";
 
-const formatCurrency = (value) => {
-  if (value == null || value === "") return "—";
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 2,
-    }).format(Number(value));
-  } catch {
-    return String(value);
-  }
+const formatINR = (value) => {
+  const amount = Number(value ?? 0);
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  }).format(amount);
 };
 
 export default function POListTable({
@@ -44,7 +35,6 @@ export default function POListTable({
 }) {
   const { submitMutation } = usePO();
   const [submittingIds, setSubmittingIds] = React.useState(new Set());
-
   const [localStatus, setLocalStatus] = React.useState({});
 
   const copyToClipboard = async (text) => {
@@ -54,7 +44,7 @@ export default function POListTable({
       console.error("copy failed", err);
     }
   };
-
+console.log(data)
   const submitForReview = async (poId) => {
     await submitMutation.mutateAsync(poId);
   };
@@ -71,14 +61,18 @@ export default function POListTable({
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ overflow: "auto" }}>
       <Table aria-label="purchase orders table" size="medium">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 140 }}>PO #</TableCell>
-            <TableCell>Purchase order</TableCell>
-            <TableCell sx={{ width: 120 }}>Status</TableCell>
-            <TableCell align="right" sx={{ width: 200 }}>
+            <TableCell sx={{ width: 140, fontWeight: 700 }}>PO #</TableCell>
+            <TableCell sx={{ width: "50%", fontWeight: 700 }}>
+              Purchase order
+            </TableCell>
+            {/* NEW PRICE COLUMN */}
+            <TableCell sx={{ width: 160, fontWeight: 700 }}>Price</TableCell>
+            <TableCell sx={{ width: 120, fontWeight: 700 }}>Status</TableCell>
+            <TableCell align="right" sx={{ width: 200, fontWeight: 700 }}>
               Actions
             </TableCell>
           </TableRow>
@@ -94,6 +88,7 @@ export default function POListTable({
 
             return (
               <TableRow key={po.id} hover>
+                {/* PO # */}
                 <TableCell>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography
@@ -114,6 +109,7 @@ export default function POListTable({
                   </Stack>
                 </TableCell>
 
+                {/* Purchase Order */}
                 <TableCell>
                   <Box>
                     <Typography
@@ -144,16 +140,16 @@ export default function POListTable({
                       {desc || "No description"}
                     </Typography>
                   </Box>
-
-                  {/* <Typography
-                    variant="subtitle2"
-                    sx={{ float: "right", fontWeight: 700, mt: 0.5 }}
-                    title={formatCurrency(amount)}
-                  >
-                    {formatCurrency(amount)}
-                  </Typography> */}
                 </TableCell>
 
+                {/* PRICE COLUMN */}
+                <TableCell>
+                  <Typography variant="subtitle2">
+                    {amount !== null ? formatINR(amount) : "—"}
+                  </Typography>
+                </TableCell>
+
+                {/* STATUS */}
                 <TableCell>
                   <Chip
                     label={
@@ -176,6 +172,7 @@ export default function POListTable({
                   />
                 </TableCell>
 
+                {/* ACTIONS */}
                 <TableCell align="right">
                   <Stack
                     direction="row"
@@ -209,7 +206,6 @@ export default function POListTable({
                       />
                     )}
 
-                    {/* PoHistory component displays icon + modal; pass po and po.poHistory */}
                     <PoHistory
                       po={po}
                       history={po.poHistory ?? po.po_history ?? []}

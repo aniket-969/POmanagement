@@ -4,19 +4,23 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generatePoNumber } from "../utils/helper.js";
 
-const ALLOWED_STATUSES = ["draft","submitted","approved","rejected"];
+const ALLOWED_STATUSES = ["draft", "submitted", "approved", "rejected"];
 
 export const createPurchaseOrder = asyncHandler(async (req, res) => {
   const user = req.user;
   if (!user) throw new ApiError(401, "Unauthorized");
 
   if (user.role !== "creator") {
-    throw new ApiError(403, "Only users with role 'creator' can create purchase orders.");
+    throw new ApiError(
+      403,
+      "Only users with role 'creator' can create purchase orders."
+    );
   }
 
   const { title, description = null, total_amount } = req.body;
 
-  const totalAmount = typeof total_amount !== "undefined" ? total_amount : req.body.totalAmount;
+  const totalAmount =
+    typeof total_amount !== "undefined" ? total_amount : req.body.totalAmount;
 
   if (typeof totalAmount === "undefined") {
     throw new ApiError(400, "totalAmount is required.");
@@ -27,19 +31,19 @@ export const createPurchaseOrder = asyncHandler(async (req, res) => {
   const createdPo = await prisma.$transaction(async (tx) => {
     const po = await tx.purchaseOrder.create({
       data: {
-        poNumber,          
+        poNumber,
         title,
         description,
-        totalAmount,       
-        status: "draft", 
-        createdById: user.id 
+        totalAmount,
+        status: "draft",
+        createdById: user.id,
       },
     });
 
     await tx.poHistory.create({
       data: {
-        poId: po.id,                 
-        userId: user.id,              
+        poId: po.id,
+        userId: user.id,
         action: "created",
         description: `Purchase order created (poNumber: ${poNumber})`,
       },
@@ -50,7 +54,13 @@ export const createPurchaseOrder = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, { purchaseOrder: createdPo }, "Purchase order created"));
+    .json(
+      new ApiResponse(
+        201,
+        { purchaseOrder: createdPo },
+        "Purchase order created"
+      )
+    );
 });
 
 export const submitPurchaseOrder = asyncHandler(async (req, res) => {
@@ -69,7 +79,10 @@ export const submitPurchaseOrder = asyncHandler(async (req, res) => {
   }
 
   if (po.createdById !== user.id) {
-    throw new ApiError(403, "Only the creator of this purchase order can submit it.");
+    throw new ApiError(
+      403,
+      "Only the creator of this purchase order can submit it."
+    );
   }
 
   if (po.status !== "draft") {
@@ -84,7 +97,7 @@ export const submitPurchaseOrder = asyncHandler(async (req, res) => {
       where: { id },
       data: {
         status: "submitted",
-        submittedAt: new Date(), 
+        submittedAt: new Date(),
       },
     });
 
@@ -102,7 +115,13 @@ export const submitPurchaseOrder = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { purchaseOrder: updatedPo }, "Purchase order submitted"));
+    .json(
+      new ApiResponse(
+        200,
+        { purchaseOrder: updatedPo },
+        "Purchase order submitted"
+      )
+    );
 });
 
 export const approvePurchaseOrder = asyncHandler(async (req, res) => {
@@ -118,10 +137,13 @@ export const approvePurchaseOrder = asyncHandler(async (req, res) => {
   if (!po) throw new ApiError(404, "Purchase order not found.");
 
   if (po.status !== "submitted") {
-    throw new ApiError(400, `Only 'submitted' POs can be approved. Current status: ${po.status}`);
+    throw new ApiError(
+      400,
+      `Only 'submitted' POs can be approved. Current status: ${po.status}`
+    );
   }
 
-  const { reviewComment =null} = req.body;
+  const { reviewComment = null } = req.body;
 
   const updatedPo = await prisma.$transaction(async (tx) => {
     const upd = await tx.purchaseOrder.update({
@@ -138,8 +160,8 @@ export const approvePurchaseOrder = asyncHandler(async (req, res) => {
         poId: upd.id,
         userId: user.id,
         action: "approved",
-        comment:reviewComment,
-        description:`Approved by user ${user.id}`,
+        comment: reviewComment,
+        description: `Approved by user ${user.id}`,
       },
     });
 
@@ -148,7 +170,13 @@ export const approvePurchaseOrder = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { purchaseOrder: updatedPo }, "Purchase order approved"));
+    .json(
+      new ApiResponse(
+        200,
+        { purchaseOrder: updatedPo },
+        "Purchase order approved"
+      )
+    );
 });
 
 export const rejectPurchaseOrder = asyncHandler(async (req, res) => {
@@ -159,14 +187,20 @@ export const rejectPurchaseOrder = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(401, "Unauthorized");
 
   if (!["approver", "admin"].includes(user.role)) {
-    throw new ApiError(403, "Only approver or admin can reject purchase orders.");
+    throw new ApiError(
+      403,
+      "Only approver or admin can reject purchase orders."
+    );
   }
 
   const po = await prisma.purchaseOrder.findUnique({ where: { id } });
   if (!po) throw new ApiError(404, "Purchase order not found.");
 
   if (po.status !== "submitted") {
-    throw new ApiError(400, `Only 'submitted' POs can be rejected. Current status: ${po.status}`);
+    throw new ApiError(
+      400,
+      `Only 'submitted' POs can be rejected. Current status: ${po.status}`
+    );
   }
 
   const { reviewComment } = req.body;
@@ -186,8 +220,8 @@ export const rejectPurchaseOrder = asyncHandler(async (req, res) => {
         poId: upd.id,
         userId: user.id,
         action: "rejected",
-        comment:reviewComment,
-        description:`Rejected by user ${user.id}`,
+        comment: reviewComment,
+        description: `Rejected by user ${user.id}`,
       },
     });
 
@@ -196,7 +230,13 @@ export const rejectPurchaseOrder = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { purchaseOrder: updatedPo }, "Purchase order rejected"));
+    .json(
+      new ApiResponse(
+        200,
+        { purchaseOrder: updatedPo },
+        "Purchase order rejected"
+      )
+    );
 });
 
 export const getPurchaseOrderById = asyncHandler(async (req, res) => {
@@ -213,7 +253,13 @@ export const getPurchaseOrderById = asyncHandler(async (req, res) => {
       reviewedBy: { select: { id: true, fullName: true, email: true } },
       poHistory: {
         orderBy: { createdAt: "asc" },
-        select: { id: true, action: true, description: true, userId: true, createdAt: true },
+        select: {
+          id: true,
+          action: true,
+          description: true,
+          userId: true,
+          createdAt: true,
+        },
       },
     },
   });
@@ -221,10 +267,17 @@ export const getPurchaseOrderById = asyncHandler(async (req, res) => {
   if (!po) throw new ApiError(404, "Purchase order not found.");
 
   if (user.role === "creator" && po.createdById !== user.id) {
-    throw new ApiError(403, "You do not have permission to view this purchase order.");
+    throw new ApiError(
+      403,
+      "You do not have permission to view this purchase order."
+    );
   }
 
-  return res.status(200).json(new ApiResponse(200, { purchaseOrder: po }, "Purchase order fetched"));
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { purchaseOrder: po }, "Purchase order fetched")
+    );
 });
 
 export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
@@ -234,7 +287,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
   const rawStatus = req.query.status ? String(req.query.status).trim() : null;
-  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null; 
+  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null;
   const skip = (page - 1) * limit;
 
   const where = {};
@@ -243,14 +296,23 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
     where.createdById = user.id;
   } else if (user.role === "approver" || user.role === "admin") {
   } else {
-    throw new ApiError(403, "You do not have permission to view purchase orders.");
+    throw new ApiError(
+      403,
+      "You do not have permission to view purchase orders."
+    );
   }
 
   if (rawStatus) {
-    const list = rawStatus.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
-    const filtered = list.filter(s => ALLOWED_STATUSES.includes(s));
+    const list = rawStatus
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    const filtered = list.filter((s) => ALLOWED_STATUSES.includes(s));
     if (filtered.length === 0) {
-      throw new ApiError(400, `Invalid status. Allowed: ${ALLOWED_STATUSES.join(",")}`);
+      throw new ApiError(
+        400,
+        `Invalid status. Allowed: ${ALLOWED_STATUSES.join(",")}`
+      );
     }
     where.status = filtered.length === 1 ? filtered[0] : { in: filtered };
   }
@@ -265,7 +327,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
   const totalCount = await prisma.purchaseOrder.count({ where });
   const totalPages = Math.max(1, Math.ceil(totalCount / limit));
 
-    const data = await prisma.purchaseOrder.findMany({
+  const data = await prisma.purchaseOrder.findMany({
     where,
     orderBy: { createdAt: "desc" },
     skip,
@@ -298,10 +360,19 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
     },
   });
 
-
-  return res.status(200).json(new ApiResponse(200, {
-    data, page, limit, totalCount, totalPages
-  }, "Purchase orders fetched"));
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        data,
+        page,
+        limit,
+        totalCount,
+        totalPages,
+      },
+      "Purchase orders fetched"
+    )
+  );
 });
 
 export const getApproverOrders = asyncHandler(async (req, res) => {
@@ -313,8 +384,10 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
 
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
-  const q = req.query.q ? String(req.query.q).trim().slice(0,200) : null;
-  const view = req.query.view ? String(req.query.view).toLowerCase() : "pending";
+  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null;
+  const view = req.query.view
+    ? String(req.query.view).toLowerCase()
+    : "pending";
   const rawStatus = req.query.status ? String(req.query.status).trim() : null;
   const skip = (page - 1) * limit;
 
@@ -330,10 +403,16 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
   }
 
   if (rawStatus) {
-    const list = rawStatus.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
-    const filtered = list.filter(s => ALLOWED_STATUSES.includes(s));
+    const list = rawStatus
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    const filtered = list.filter((s) => ALLOWED_STATUSES.includes(s));
     if (filtered.length === 0) {
-      throw new ApiError(400, `Invalid status. Allowed: ${ALLOWED_STATUSES.join(",")}`);
+      throw new ApiError(
+        400,
+        `Invalid status. Allowed: ${ALLOWED_STATUSES.join(",")}`
+      );
     }
     where.status = filtered.length === 1 ? filtered[0] : { in: filtered };
   }
@@ -357,7 +436,7 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
       id: true,
       poNumber: true,
       title: true,
-      description:true,
+      description: true,
       totalAmount: true,
       status: true,
       createdAt: true,
@@ -366,7 +445,6 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
       createdBy: { select: { id: true, fullName: true, email: true } },
       reviewedBy: { select: { id: true, fullName: true, email: true } },
 
-     
       poHistory: {
         orderBy: { createdAt: "desc" },
         select: {
@@ -381,6 +459,80 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
     },
   });
 
-  return res.status(200).json(new ApiResponse(200, { data, page, limit, totalCount, totalPages }, "Approver orders fetched"));
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { data, page, limit, totalCount, totalPages },
+        "Approver orders fetched"
+      )
+    );
 });
 
+export const getApproverReviewedOrders = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!["approver", "admin"].includes(user.role)) {
+    throw new ApiError(403, "Only approver or admin can access this endpoint.");
+  }
+
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
+  const q = req.query.q ? String(req.query.q).trim() : null;
+  const status = req.query.status
+    ? String(req.query.status).trim().toLowerCase()
+    : null;
+
+  const where = {
+    reviewedById: user.id,
+
+    ...(status
+      ? { status: status }
+      : { status: { in: ["approved", "rejected"] } }),
+  };
+
+  if (q) {
+    where.AND = [
+      ...(where.AND || []),
+      {
+        OR: [
+          { poNumber: { contains: q, mode: "insensitive" } },
+          { title: { contains: q, mode: "insensitive" } },
+          { description: { contains: q, mode: "insensitive" } },
+        ],
+      },
+    ];
+  }
+
+  const total = await prisma.purchaseOrder.count({ where });
+
+  const orders = await prisma.purchaseOrder.findMany({
+    where,
+    orderBy: [
+      { reviewedAt: "desc" },
+      { submittedAt: "desc" },
+      { createdAt: "desc" },
+    ],
+    skip: offset,
+    take: limit,
+    include: {
+      createdBy: { select: { id: true, fullName: true, email: true } },
+      reviewedBy: { select: { id: true, fullName: true, email: true } },
+    },
+  });
+
+  const totalPages = Math.ceil(total / limit);
+
+  return res.json(
+    new ApiResponse(
+      200,
+      {
+        orders,
+        meta: { total, page, limit, totalPages },
+      },
+      "Orders fetched successfully"
+    )
+  );
+});
