@@ -1,20 +1,22 @@
-
 import { Navigate } from "react-router-dom";
 
 const RoleRedirect = () => {
-  
   const session = localStorage.getItem("session");
-
-  const user = JSON.parse(session);
-
-  if (user.role === "admin") {
-    return <Navigate to="/orders/admin" replace />;
-  } else if (user.role === "approver") {
-    return <Navigate to="/orders/approver" replace />;
-  } else if (user.role === "creator" ) {
-    return <Navigate to="/orders/user" replace />;
-  } else {
+  const user = session ? JSON.parse(session)?.user : null;
+console.log(user)
+  if (!user || !user.role) {
     return <Navigate to="/login" replace />;
+  }
+
+  switch (user.role) {
+    case "admin":
+      return <Navigate to="/orders/admin" replace />;
+    case "approver":
+      return <Navigate to="/orders/approver" replace />;
+    case "creator":
+      return <Navigate to="/orders/user" replace />;
+    default:
+      return <Navigate to="/login" replace />;
   }
 };
 
