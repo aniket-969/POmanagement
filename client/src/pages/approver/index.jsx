@@ -20,8 +20,9 @@ const Approver = () => {
       width:"100%",
       display:'flex',
       flexDirection:'column',
-      gap:3,
-      justifyItems:'center'
+      gap:2,
+      justifyItems:'center',
+      pt:1,
     }}>
       <Topbar/>
       <SearchInput onSearch={onSearch}/>

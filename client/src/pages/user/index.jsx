@@ -27,15 +27,17 @@ const User = () => {
 
   return (
     <Box sx={{ width: "100%" ,
-      p:2
+       display: "flex",
+       flexDirection:"column",
+          gap:2
     }}>
       <Topbar />
 
       <Box
         sx={{
           display: "flex",
-          justifyItems: "",
-          alignItems: "center",
+          // justifyItems: "center",
+          // alignItems: "center",
           gap: 4,
           width: "100%",
         }}
