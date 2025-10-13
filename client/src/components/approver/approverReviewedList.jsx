@@ -2,6 +2,7 @@ import React from "react";
 import ApproverReviewedTable from "./approverReviewedTable";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useApproverPO } from "../../hooks/usePO";
+import PaginationControls from "../admin/paginationControls";
 
 const ApproverReviewedList = () => {
   const { approverReviewListQuery } = useApproverPO();
@@ -15,8 +16,8 @@ const ApproverReviewedList = () => {
   }
   console.log(data);
   const payloadData = data?.data?.data?.orders || [];
-  const totalPagesValue = data?.data?.data?.meta?.totalPages || 0;
-  const currentPageValue = data?.data?.data?.meta?.page || 1;
+  const totalPages = data?.data?.data?.meta?.totalPages || 0;
+  const currentPage = data?.data?.data?.meta?.page || 1;
 //   console.log(payloadData);
   return (
     <Box>
@@ -31,6 +32,7 @@ const ApproverReviewedList = () => {
         Your PO
       </Typography>
       <ApproverReviewedTable data={payloadData} />
+      <PaginationControls  page={currentPage} totalPages={totalPages} />
     </Box>
   );
 };

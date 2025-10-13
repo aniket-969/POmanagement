@@ -36,6 +36,12 @@ const formatINR = (value) => {
 };
 
 const ApproverTable = ({ data = [] }) => {
+  if(data.length == 0){
+    return <Typography sx={{
+      textAlign:"center"
+    }}>No orders to show</Typography>
+  }
+
   return (
     <TableContainer component={Paper} sx={{ overflow: "auto" }}>
       <Table aria-label="purchase orders table" size="medium">
