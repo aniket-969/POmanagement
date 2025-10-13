@@ -472,6 +472,7 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
 
 export const getApproverReviewedOrders = asyncHandler(async (req, res) => {
   const user = req.user;
+  if (!user) throw new ApiError(401, "Unauthorized");
   if (!["approver", "admin"].includes(user.role)) {
     throw new ApiError(403, "Only approver or admin can access this endpoint.");
   }
@@ -485,14 +486,13 @@ export const getApproverReviewedOrders = asyncHandler(async (req, res) => {
     ? String(req.query.status).trim().toLowerCase()
     : null;
 
+  // base where: reviewed by this approver and status in approved/rejected (or filtered by status)
   const where = {
     reviewedById: user.id,
-
-    ...(status
-      ? { status: status }
-      : { status: { in: ["approved", "rejected"] } }),
+    ...(status ? { status: status } : { status: { in: ["approved", "rejected"] } }),
   };
 
+  // add search (poNumber / title / description)
   if (q) {
     where.AND = [
       ...(where.AND || []),
@@ -520,6 +520,19 @@ export const getApproverReviewedOrders = asyncHandler(async (req, res) => {
     include: {
       createdBy: { select: { id: true, fullName: true, email: true } },
       reviewedBy: { select: { id: true, fullName: true, email: true } },
+
+      // include poHistory ordered descending and include the user who performed the action
+      poHistory: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          action: true,
+          description: true,
+          comment: true,
+          createdAt: true,
+          user: { select: { id: true, fullName: true, email: true } },
+        },
+      },
     },
   });
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useApproverPO } from "../../hooks/usePO";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import PaginationControls from "../admin/paginationControls";
 import ApproverTable from "./approverTable";
@@ -28,6 +28,16 @@ const ApproverList = () => {
   const totalPages = apiResp?.totalPages ?? 1;
   return (
     <div>
+     <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 700,
+          mb: 2,
+          textAlign:"center"
+        }}
+      >
+        Pending PO
+      </Typography>
       <ApproverTable data={payload} />
       <PaginationControls page={currentPage} totalPages={totalPages} />
     </div>

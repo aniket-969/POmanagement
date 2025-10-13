@@ -1,6 +1,6 @@
 import React from "react";
 import ApproverReviewedTable from "./approverReviewedTable";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useApproverPO } from "../../hooks/usePO";
 
 const ApproverReviewedList = () => {
@@ -20,6 +20,16 @@ const ApproverReviewedList = () => {
 //   console.log(payloadData);
   return (
     <Box>
+        <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 700,
+          mb: 2,
+          textAlign:"center"
+        }}
+      >
+        Your PO
+      </Typography>
       <ApproverReviewedTable data={payloadData} />
     </Box>
   );
