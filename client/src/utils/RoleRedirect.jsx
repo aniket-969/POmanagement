@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 const RoleRedirect = () => {
   const session = localStorage.getItem("session");
   const user = session ? JSON.parse(session)?.user : null;
-console.log(user)
+  
   if (!user || !user.role) {
     return <Navigate to="/login" replace />;
   }

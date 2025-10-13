@@ -1,1 +1,3 @@
-export const generatePoNumber = () => `PO-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+import { randomUUID } from "crypto";
+
+export const generatePoNumber = () => `PO-${randomUUID().split("-")[0].toUpperCase()}`;

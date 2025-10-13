@@ -73,7 +73,7 @@ console.log(data)
             <TableCell sx={{ width: 160, fontWeight: 700 }}>Price</TableCell>
             <TableCell sx={{ width: 120, fontWeight: 700 }}>Status</TableCell>
             <TableCell align="right" sx={{ width: 200, fontWeight: 700 }}>
-              Actions
+              Actions/Info
             </TableCell>
           </TableRow>
         </TableHead>
