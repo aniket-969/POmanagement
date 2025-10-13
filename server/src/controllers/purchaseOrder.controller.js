@@ -314,7 +314,7 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
   const q = req.query.q ? String(req.query.q).trim().slice(0,200) : null;
-  const view = req.query.view ? String(req.query.view).toLowerCase() : "pending"; // pending | handled
+  const view = req.query.view ? String(req.query.view).toLowerCase() : "pending";
   const rawStatus = req.query.status ? String(req.query.status).trim() : null;
   const skip = (page - 1) * limit;
 
@@ -357,6 +357,7 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
       id: true,
       poNumber: true,
       title: true,
+      description:true,
       totalAmount: true,
       status: true,
       createdAt: true,
@@ -365,7 +366,7 @@ export const getApproverOrders = asyncHandler(async (req, res) => {
       createdBy: { select: { id: true, fullName: true, email: true } },
       reviewedBy: { select: { id: true, fullName: true, email: true } },
 
-      // <-- include poHistory here (recent first), and include the user who made the history entry
+     
       poHistory: {
         orderBy: { createdAt: "desc" },
         select: {
