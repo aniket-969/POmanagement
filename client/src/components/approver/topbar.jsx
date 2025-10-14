@@ -10,7 +10,8 @@ const Topbar = () => {
   return (
     <Box sx={{
         display:"flex",
-        justifyContent:"space-around"
+        justifyContent:"space-around",
+        mt:1
     }}>
       <Typography>
         {session?.user?.fullName}

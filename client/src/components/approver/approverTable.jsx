@@ -43,7 +43,15 @@ const ApproverTable = ({ data = [] }) => {
   }
 
   return (
-    <TableContainer component={Paper} sx={{ overflow: "auto" }}>
+    <TableContainer component={Paper}  sx={{
+    overflow: "auto",
+    "& .MuiTableCell-root": {
+      fontSize: "1rem",    
+    },
+    "& .MuiTypography-root": {
+      fontSize: "1rem",     
+    },
+  }}>
       <Table aria-label="purchase orders table" size="medium">
         <TableHead>
           <TableRow>

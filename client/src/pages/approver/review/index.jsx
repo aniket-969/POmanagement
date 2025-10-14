@@ -1,12 +1,14 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import ApproverReviewedList from '../../../components/approver/approverReviewedList'
-import SearchInput from '../../../components/ui/search';
-import Filter from '../../../components/ui/filter';
-import { useSearchParams } from 'react-router-dom';
+import { Box } from "@mui/material";
+import React from "react";
+import ApproverReviewedList from "../../../components/approver/approverReviewedList";
+import SearchInput from "../../../components/ui/search";
+import Filter from "../../../components/ui/filter";
+import { useSearchParams } from "react-router-dom";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const ApproverReviewed = () => {
-     const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const onSearch = (q) => {
     const params = new URLSearchParams(searchParams);
@@ -15,7 +17,6 @@ const ApproverReviewed = () => {
     params.set("page", "1");
     setSearchParams(params);
   };
-
 
   const handleStatusSelect = (value) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -27,27 +28,31 @@ const ApproverReviewed = () => {
 
   return (
     <Box>
-      <Box sx={{
-        display:'flex',
-        gap:4, 
-        m:2
-      }}>
-        <SearchInput onSearch={onSearch}/>
-         <Filter
-                  paramName="status"
-                  label="Status"
-                  options={[
-                    { label: "Approved", value: "approved" },
-                    { label: "Rejected", value: "rejected" },
-                  ]}
-                  onSelect={handleStatusSelect}
-                />
+      <Box
+        sx={{
+          display: "flex",
+          gap: 4,
+          m: 2,
+        }}
+      >
+        <SearchInput onSearch={onSearch} />
+        <Filter
+          paramName="status"
+          label="Status"
+          options={[
+            { label: "Approved", value: "approved" },
+            { label: "Rejected", value: "rejected" },
+          ]}
+          onSelect={handleStatusSelect}
+        />
+        <Link to={"/orders/approver"}>
+          <Button variant="contained">Home</Button>
+        </Link>
       </Box>
-        
-        <ApproverReviewedList/>
-    
-    </Box>
-  )
-}
 
-export default ApproverReviewed
+      <ApproverReviewedList />
+    </Box>
+  );
+};
+
+export default ApproverReviewed;
