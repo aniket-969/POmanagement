@@ -4,8 +4,9 @@ import { ApiError } from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
 import bcrypt from "bcrypt"
 
-const ALLOWED_STATUS = ["pending", "active", "suspended", "deleted"];
-const ALLOWED_ROLES = ["creator", "approver"]; 
+
+const ALLOWED_STATUS = ["active", "suspended"];
+const ALLOWED_ROLES = ["creator", "approver"];
 
 export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
   const page = Math.max(1, Number(req.query.page) || 1);
@@ -14,14 +15,17 @@ export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
 
   const q = req.query.q ? String(req.query.q).trim() : null;
   const rawStatus = req.query.status ? String(req.query.status).trim() : null;
-  const rawRole = req.query.role ? String(req.query.role).trim() : null; 
+  const rawRole = req.query.role ? String(req.query.role).trim() : null;
 
   const where = {
-  
-    NOT: { role: "admin" },
+    // ✅ Always exclude admin and pending users
+    NOT: [
+      { role: "admin" },
+      { status: "pending" },
+    ],
   };
 
-  // search
+  // 🔍 Search (by fullName or email)
   if (q) {
     where.OR = [
       { fullName: { contains: q, mode: "insensitive" } },
@@ -29,7 +33,7 @@ export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
     ];
   }
 
-  // status filter
+  // 🎯 Status filter (only allowed non-pending statuses)
   if (rawStatus) {
     const statuses = rawStatus.split(",").map((s) => s.trim()).filter(Boolean);
     const valid = statuses.filter((s) => ALLOWED_STATUS.includes(s));
@@ -39,7 +43,7 @@ export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
     where.status = valid.length === 1 ? valid[0] : { in: valid };
   }
 
-  // role filter (only creator / approver)
+  // 🧩 Role filter (approver / creator)
   if (rawRole) {
     const roles = rawRole.split(",").map((s) => s.trim()).filter(Boolean);
     const valid = roles.filter((r) => ALLOWED_ROLES.includes(r));
@@ -49,8 +53,10 @@ export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
     where.role = valid.length === 1 ? valid[0] : { in: valid };
   }
 
+  // 📊 Total count
   const total = await prisma.user.count({ where });
 
+  // 📋 Fetch users
   const users = await prisma.user.findMany({
     where,
     orderBy: { createdAt: "desc" },
@@ -86,6 +92,7 @@ export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
     )
   );
 });
+
 
 export const getPendingCreators = asyncHandler(async (req, res) => {
 

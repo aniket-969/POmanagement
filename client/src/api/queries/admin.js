@@ -34,14 +34,16 @@ export const getPendingCreators = ({ queryKey }) => {
 export const getUsersForAdmin = ({ queryKey }) => {
   
   const [, , params] = queryKey;
-  // console.log(params)
-  const { q = "", page = 1, limit = 5 } = params || {};
+  console.log(params)
+  const { q = "", page = 1, limit = 5 ,role=undefined,status=undefined} = params || {};
 
   return axiosClient.get(`/${base}/users`, {
     params: {
       q: q || undefined,
       page,
       limit,
+      ...(role ? { role } : {}),
+      ...(status ? { status } : {}),
     },
   });
 };

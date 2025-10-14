@@ -16,7 +16,10 @@ export const useAdmin = () => {
   const q = searchParams.get("q") ?? "";
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 5);
-  console.log(q, page, limit);
+
+  const role = searchParams.get("role") ?? "";
+  const status = searchParams.get("status") ?? "";
+  console.log(q, page, limit,role,status);
 
   const pendingCreatorsQuery = useQuery({
     queryKey: ["admin", "pending-creators", { q, page, limit }],
@@ -28,7 +31,7 @@ export const useAdmin = () => {
   });
 
   const adminUsersQuery = useQuery({
-    queryKey: ["admin", "users", { q, page, limit }],
+    queryKey: ["admin", "users", { q, page, limit,role,status }],
     queryFn: getUsersForAdmin,
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
@@ -66,14 +69,15 @@ export const useAdmin = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }) => updateUserStatus(id, { status }),
-  onSuccess: () => {
-    toast.success("User status updated successfully!");
-    queryClient.invalidateQueries(["admin", "pending-creators"]);
-  },
-  onError: (error) => {
-    const message = error?.response?.data?.message || "Failed to update user status.";
-    toast.error(message);
-  },
+    onSuccess: () => {
+      toast.success("User status updated successfully!");
+      queryClient.invalidateQueries(["admin", "pending-creators"]);
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.message || "Failed to update user status.";
+      toast.error(message);
+    },
   });
 
   const createApproverMutation = useMutation({
@@ -96,7 +100,7 @@ export const useAdmin = () => {
     createApproverMutation,
     rejectMutation,
     updateStatusMutation,
-    adminUsersQuery
+    adminUsersQuery,
   };
 };
 

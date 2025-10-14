@@ -36,7 +36,7 @@ export default function Filter({
             <MenuItem key={opt.value} value={opt.value}>
               {opt.label}
             </MenuItem>
-          ))}
+          ))} 
         </Select>
       </FormControl>
     </Box>
