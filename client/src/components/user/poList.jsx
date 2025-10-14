@@ -85,7 +85,8 @@ console.log(data)
             const desc = po.description ?? "";
             const amount = po.totalAmount ?? po.total_amount ?? null;
             const status = localStatus[po.id] ?? po.status ?? "unknown";
-
+  const displayStatus =
+    status === "submitted" ? "pending approval" : status;
             return (
               <TableRow key={po.id} hover>
                 {/* PO # */}
@@ -153,8 +154,8 @@ console.log(data)
                 <TableCell>
                   <Chip
                     label={
-                      String(status).charAt(0).toUpperCase() +
-                      String(status).slice(1)
+                      String(displayStatus).charAt(0).toUpperCase() +
+                      String(displayStatus).slice(1)
                     }
                     size="small"
                     color={
