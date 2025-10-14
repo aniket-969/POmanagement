@@ -4,6 +4,7 @@ import {
   approveUser,
   createApprover,
   getPendingCreators,
+  getUsersForAdmin,
   rejectUser,
   updateUserStatus,
 } from "../api/queries/admin";
@@ -20,6 +21,15 @@ export const useAdmin = () => {
   const pendingCreatorsQuery = useQuery({
     queryKey: ["admin", "pending-creators", { q, page, limit }],
     queryFn: getPendingCreators,
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+    enabled: true,
+  });
+
+  const adminUsersQuery = useQuery({
+    queryKey: ["admin", "users", { q, page, limit }],
+    queryFn: getUsersForAdmin,
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
@@ -85,6 +95,8 @@ export const useAdmin = () => {
     approveMutation,
     createApproverMutation,
     rejectMutation,
+    updateStatusMutation,
+    adminUsersQuery
   };
 };
 

@@ -4,6 +4,140 @@ import { ApiError } from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
 import bcrypt from "bcrypt"
 
+const ALLOWED_STATUS = ["pending", "active", "suspended", "deleted"];
+const ALLOWED_ROLES = ["creator", "approver"]; 
+
+export const getAllUsersForAdmin = asyncHandler(async (req, res) => {
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 20));
+  const skip = (page - 1) * limit;
+
+  const q = req.query.q ? String(req.query.q).trim() : null;
+  const rawStatus = req.query.status ? String(req.query.status).trim() : null;
+  const rawRole = req.query.role ? String(req.query.role).trim() : null; 
+
+  const where = {
+  
+    NOT: { role: "admin" },
+  };
+
+  // search
+  if (q) {
+    where.OR = [
+      { fullName: { contains: q, mode: "insensitive" } },
+      { email: { contains: q, mode: "insensitive" } },
+    ];
+  }
+
+  // status filter
+  if (rawStatus) {
+    const statuses = rawStatus.split(",").map((s) => s.trim()).filter(Boolean);
+    const valid = statuses.filter((s) => ALLOWED_STATUS.includes(s));
+    if (valid.length === 0) {
+      throw new ApiError(400, `Invalid status filter. Allowed: ${ALLOWED_STATUS.join(", ")}`);
+    }
+    where.status = valid.length === 1 ? valid[0] : { in: valid };
+  }
+
+  // role filter (only creator / approver)
+  if (rawRole) {
+    const roles = rawRole.split(",").map((s) => s.trim()).filter(Boolean);
+    const valid = roles.filter((r) => ALLOWED_ROLES.includes(r));
+    if (valid.length === 0) {
+      throw new ApiError(400, `Invalid role filter. Allowed: ${ALLOWED_ROLES.join(", ")}`);
+    }
+    where.role = valid.length === 1 ? valid[0] : { in: valid };
+  }
+
+  const total = await prisma.user.count({ where });
+
+  const users = await prisma.user.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: limit,
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      _count: {
+        select: {
+          createdPurchaseOrders: true,
+          reviewedPurchaseOrders: true,
+        },
+      },
+    },
+  });
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        users,
+        meta: { total, page, limit, totalPages },
+      },
+      "Users fetched successfully"
+    )
+  );
+});
+
+export const getPendingCreators = asyncHandler(async (req, res) => {
+
+  const user = req.user;
+console.log("here")
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null;
+  const skip = (page - 1) * limit;
+
+  const where = {
+    status: "pending",
+    role: "creator",
+  };
+
+  if (q) {
+    where.OR = [
+      { email: { contains: q, mode: "insensitive" } },
+      { fullName: { contains: q, mode: "insensitive" } },
+    ];
+  }
+
+  const totalCount = await prisma.user.count({ where });
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+
+  const data = await prisma.user.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: limit,
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { data, page, limit, totalCount, totalPages },
+        "Pending creators fetched"
+      )
+    );
+});
+
 export const approveUser = asyncHandler(async (req, res) => {
  console.log("Here at")
   const caller = req.user;
@@ -133,53 +267,32 @@ export const createApprover = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, { user: approver }, "Approver created successfully."));
 });
 
-export const getPendingCreators = asyncHandler(async (req, res) => {
+export const updateUserStatus = asyncHandler(async (req, res) => {
 
-  const user = req.user;
-console.log("here")
-  const page = Math.max(1, Number(req.query.page) || 1);
-  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
-  const q = req.query.q ? String(req.query.q).trim().slice(0, 200) : null;
-  const skip = (page - 1) * limit;
+  const { id } = req.params;
+  const { status } = req.body;
 
-  const where = {
-    status: "pending",
-    role: "creator",
-  };
-
-  if (q) {
-    where.OR = [
-      { email: { contains: q, mode: "insensitive" } },
-      { fullName: { contains: q, mode: "insensitive" } },
-    ];
+  if (!["active", "suspended"].includes(status)) {
+    throw new ApiError(400, "Invalid status. Must be 'active' or 'suspended'.");
   }
 
-  const totalCount = await prisma.user.count({ where });
-  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+  const user = await prisma.user.findUnique({ where: { id: Number(id) } });
+  if (!user) throw new ApiError(404, "User not found.");
 
-  const data = await prisma.user.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    skip,
-    take: limit,
+  const updatedUser = await prisma.user.update({
+    where: { id: Number(id) },
+    data: { status },
     select: {
       id: true,
-      email: true,
       fullName: true,
+      email: true,
       role: true,
       status: true,
-      createdAt: true,
       updatedAt: true,
     },
   });
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { data, page, limit, totalCount, totalPages },
-        "Pending creators fetched"
-      )
-    );
+    .json(new ApiResponse(200, { user: updatedUser }, `User status updated to '${status}'`));
 });
