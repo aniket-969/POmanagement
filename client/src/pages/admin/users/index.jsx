@@ -30,7 +30,9 @@ const ManageUsers = () => {
     setSearchParams(params, { replace: true });
   };
   return (
-    <Box>
+    <Box sx={{
+        p:1
+    }}>
       <Box
         sx={{
           display: "flex",
@@ -38,6 +40,7 @@ const ManageUsers = () => {
         }}
       >
         <SearchInput onSearch={onSearch} />
+
        <Filter
           paramName="role"
           label="Role"

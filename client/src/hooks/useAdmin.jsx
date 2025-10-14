@@ -19,7 +19,7 @@ export const useAdmin = () => {
 
   const role = searchParams.get("role") ?? "";
   const status = searchParams.get("status") ?? "";
-  console.log(q, page, limit,role,status);
+  // console.log(q, page, limit,role,status);
 
   const pendingCreatorsQuery = useQuery({
     queryKey: ["admin", "pending-creators", { q, page, limit }],

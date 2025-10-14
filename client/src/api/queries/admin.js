@@ -49,7 +49,7 @@ export const getUsersForAdmin = ({ queryKey }) => {
 };
 
 export const updateUserStatus = (id,data) => {
-  console.log(data)
+  console.log(data,id)
   return axiosClient.patch(`/${base}/${id}/status`, data);
 };
  

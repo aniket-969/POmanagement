@@ -278,14 +278,12 @@ export const updateUserStatus = asyncHandler(async (req, res) => {
 
   const { id } = req.params;
   const { status } = req.body;
-
   if (!["active", "suspended"].includes(status)) {
     throw new ApiError(400, "Invalid status. Must be 'active' or 'suspended'.");
   }
 
   const user = await prisma.user.findUnique({ where: { id: Number(id) } });
   if (!user) throw new ApiError(404, "User not found.");
-
   const updatedUser = await prisma.user.update({
     where: { id: Number(id) },
     data: { status },

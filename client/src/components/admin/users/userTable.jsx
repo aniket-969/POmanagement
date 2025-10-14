@@ -12,6 +12,8 @@ import {
   Stack,
   Button
 } from "@mui/material";
+import DeactivateUser from "./deactivateUser";
+import ActivateUser from "./activateUser";
 
 const UserTable = ({users}) => {
 
@@ -90,19 +92,7 @@ const UserTable = ({users}) => {
 
                 {/* Action button */}
                 <TableCell align="right" sx={{ verticalAlign: "middle", py: 2 }}>
-                  <Button
-                    size="small"
-                    variant={isActive ? "outlined" : "contained"}
-                    color={isActive ? "error" : "primary"}
-                    onClick={() =>
-                      console.log(
-                        `${isActive ? "Deactivating" : "Activating"} user`,
-                        user.id
-                      )
-                    }
-                  >
-                    {isActive ? "Deactivate" : "Activate"}
-                  </Button>
+                  {isActive?<DeactivateUser id={user.id}/>:<ActivateUser id={user.id}/>}
                 </TableCell>
               </TableRow>
             );

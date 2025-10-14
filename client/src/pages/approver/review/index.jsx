@@ -27,6 +27,7 @@ const ApproverReviewed = () => {
 
   return (
     <Box>
+      
         <SearchInput onSearch={onSearch}/>
          <Filter
                   paramName="status"
