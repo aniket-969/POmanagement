@@ -27,7 +27,11 @@ const ApproverReviewed = () => {
 
   return (
     <Box>
-      
+      <Box sx={{
+        display:'flex',
+        gap:4, 
+        m:2
+      }}>
         <SearchInput onSearch={onSearch}/>
          <Filter
                   paramName="status"
@@ -38,6 +42,8 @@ const ApproverReviewed = () => {
                   ]}
                   onSelect={handleStatusSelect}
                 />
+      </Box>
+        
         <ApproverReviewedList/>
     
     </Box>

@@ -6,6 +6,7 @@ import useAdmin from '../../hooks/useAdmin'
 import { useState } from 'react'
 
 import { useSearchParams } from "react-router-dom";
+import { Typography } from '@mui/material';
 
 const PendingList = () => {
   const [searchParams] = useSearchParams();
@@ -40,8 +41,14 @@ const PendingList = () => {
         display: "flex",
         flexDirection: "column",
         gap: 4,
+        pt:2
       }}
     >
+      <Typography variant="h6" color="text.primary" sx={{ fontWeight: 600 ,
+        textAlign:"center"
+      }}>
+      Pending User Approvals
+    </Typography>
       <PendingTable pendingData={list} isUpdating={isFetching} />
       <PaginationControls page={currentPage} totalPages={totalPages} />
     </Box>

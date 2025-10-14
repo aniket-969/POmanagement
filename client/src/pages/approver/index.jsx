@@ -1,9 +1,9 @@
-import React from 'react'
-import { Box } from '@mui/material';
-import Topbar from '../../components/approver/topbar';
-import ApproverList from '../../components/approver/approverList';
-import SearchInput from '../../components/ui/search';
-import { useSearchParams } from 'react-router-dom';
+import React from "react";
+import { Box } from "@mui/material";
+import Topbar from "../../components/approver/topbar";
+import ApproverList from "../../components/approver/approverList";
+import SearchInput from "../../components/ui/search";
+import { useSearchParams } from "react-router-dom";
 
 const Approver = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,20 +16,27 @@ const Approver = () => {
     setSearchParams(params);
   };
   return (
-    <Box sx={{
-      width:"100%",
-      display:'flex',
-      flexDirection:'column',
-      gap:2,
-      justifyItems:'center',
-      pt:1,
-    }}>
-      <Topbar/>
-      <SearchInput onSearch={onSearch}/>
-      <ApproverList/>
-      
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        justifyItems: "center",
+        pt: 1,
+      }}
+    >
+      <Topbar />
+      <Box sx={{
+        display:'flex',
+        justifyContent:'center',
+        m:2
+      }}>
+        <SearchInput onSearch={onSearch} />
+      </Box>
+      <ApproverList />
     </Box>
-  )
-}
+  );
+};
 
-export default Approver
+export default Approver;

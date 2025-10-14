@@ -2,8 +2,10 @@ import { Box } from '@mui/material'
 import React from 'react'
 import SearchInput from '../ui/search'
 import CreateApprover from './createApprover'
-import {useSearchParams} from "react-router-dom"
+import {useSearchParams,Link} from "react-router-dom"
 import Logout from '../logout'
+import { Button } from '@mui/material';
+
 
 const Topbar = () => {
   const [searchParams,setSearchParams] = useSearchParams()
@@ -35,7 +37,11 @@ const onSearch = (q)=>{
         display:"flex",
         gap:3
       }}>
-        
+        <Link to={"/orders/admin/users"}>
+        <Button variant='outlined'>
+         Manage Users
+        </Button>
+        </Link>
         <CreateApprover/>
       <Logout/>
       </Box>

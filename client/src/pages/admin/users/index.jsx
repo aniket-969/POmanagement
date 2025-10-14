@@ -3,6 +3,8 @@ import UserList from "../../../components/admin/users/userList";
 import { Box } from "@mui/material";
 import SearchInput from "../../../components/ui/search";
 import Filter from "../../../components/ui/filter";
+import { Button, Typography } from '@mui/material';
+import {Link} from "react-router-dom"
 
 const ManageUsers = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,19 +31,24 @@ const ManageUsers = () => {
     params.set("page", "1");
     setSearchParams(params, { replace: true });
   };
+
   return (
-    <Box sx={{
-        p:1
-    }}>
+    <Box
+      sx={{
+        p: 1,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
           gap: 3,
+          mb: 5,
+          mt: 1,
         }}
       >
         <SearchInput onSearch={onSearch} />
 
-       <Filter
+        <Filter
           paramName="role"
           label="Role"
           options={[
@@ -59,8 +66,19 @@ const ManageUsers = () => {
             { label: "Active", value: "active" },
           ]}
           onSelect={handleStatusSelect}
-        />
+        /> <Link to={"/orders/admin"}>
+        <Button variant="contained">
+         
+          Home
+        </Button>
+          </Link>
       </Box>
+      <Typography variant="h6"  sx={{ 
+        textAlign:"center",
+        fontWeight:600
+       }}>
+         User List
+      </Typography>
       <UserList />
     </Box>
   );

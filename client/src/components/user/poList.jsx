@@ -33,6 +33,7 @@ export default function POListTable({
   data = [],
   canSubmit = (po) => po?.status === "draft",
 }) {
+  console.log(data)
   const { submitMutation } = usePO();
   const [submittingIds, setSubmittingIds] = React.useState(new Set());
   const [localStatus, setLocalStatus] = React.useState({});
@@ -194,7 +195,7 @@ console.log(data)
                           ) : null
                         }
                       >
-                        {isSubmitting ? "Submitting..." : "Submit for review"}
+                        {isSubmitting ? "Submitting..." : "Submit"}
                       </Button>
                     ) : (
                       <Chip

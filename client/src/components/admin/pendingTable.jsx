@@ -21,9 +21,9 @@ const PendingTable = ({ pendingData }) => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>email</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell sx={{ fontWeight: 700 }}>Name</TableCell>
+            <TableCell sx={{ fontWeight: 700 }}>Email</TableCell>
+            <TableCell sx={{ fontWeight: 700 }}align="right">Actions</TableCell>
             <TableCell align="righ"></TableCell>
           </TableRow>
         </TableHead>

@@ -37,7 +37,7 @@ const Reject = ({ poId }) => {
     <>
       <Button
         variant="contained"
-        size="small"
+        size="small" color='error'
         onClick={openModal}
         aria-label="open-approve-modal"
       >

@@ -4,6 +4,7 @@ import UserTable from './userTable'
 import { useSearchParams } from 'react-router-dom';
 import useAdmin from '../../../hooks/useAdmin';
 import PaginationControls from '../paginationControls';
+import { Typography } from '@mui/material';
 
 const UserList = () => {
   const [searchParams] = useSearchParams();
@@ -38,6 +39,7 @@ const UserList = () => {
         gap: 4,
       }}
     >
+      
       <UserTable users={payloadData} isUpdating={isFetching} />
       <PaginationControls page={currentPage} totalPages={totalPages} />
     </Box>

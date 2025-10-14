@@ -115,7 +115,7 @@ const CreatePoForm = ({ handleClose }) => {
                   error={!!errors.total_amount}
                   helperText={
                     errors.total_amount?.message ||
-                    "Enter numeric value. Currency formatting is visual only."
+                    "Enter numeric value."
                   }
                   fullWidth
                   inputMode="decimal"

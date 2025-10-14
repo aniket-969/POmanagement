@@ -8,7 +8,7 @@ const RejectUser = ({id}) => {
       rejectMutation.mutateAsync({id})
     }
   return (
-    <Button onClick={onClick}variant='outlined'>Reject</Button>
+    <Button onClick={onClick} color='error' variant='outlined'>Reject</Button>
   )
 }
 

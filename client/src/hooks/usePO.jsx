@@ -15,7 +15,7 @@ import { useSearchParams } from "react-router-dom";
 
 const DEFAULTS = {
   page: 1,
-  limit: 10,
+  limit: 5,
   q: "",
   status: "",
   sortBy: "createdAt",

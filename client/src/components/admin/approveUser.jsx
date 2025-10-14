@@ -10,7 +10,7 @@ const ApproveUser = ({id}) => {
     }
 
   return (
-    <Button onClick={onClick}variant='outlined'>Approve</Button>
+    <Button onClick={onClick} color='success' variant='outlined'>Approve</Button>
   )
 }
 
