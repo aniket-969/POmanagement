@@ -1,7 +1,8 @@
 import React from 'react'
 import Logout from '../logout'
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Topbar = () => {
     const session = JSON.parse(localStorage.getItem("session"))
@@ -14,7 +15,12 @@ const Topbar = () => {
       <Typography>
         {session?.user?.fullName}
       </Typography>
+      <Link to={"/orders/approver/reviewed"}>
+      <Button variant='outlined'>Your PO</Button>
+      </Link>
+      
         <Logout/>
+
     </Box>
   )
 }

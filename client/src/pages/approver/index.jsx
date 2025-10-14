@@ -27,7 +27,7 @@ const Approver = () => {
       <Topbar/>
       <SearchInput onSearch={onSearch}/>
       <ApproverList/>
-      {/* <ApproverReviewedList/> */}
+      
     </Box>
   )
 }
