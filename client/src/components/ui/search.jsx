@@ -6,9 +6,9 @@ import { useDebouncedCallback } from './../../hooks/useDebounce';
 
 export default function DebugSearchInput({
   onSearch,
-  placeholder = "Search users...",
+  placeholder = "Search ...",
   initialValue = "",
-  delay = 300,
+  delay = 500,
 }) {
   const [value, setValue] = useState(initialValue ?? "");
 
@@ -17,7 +17,7 @@ export default function DebugSearchInput({
   }, [initialValue]);
 
   const debouncedSearch = useDebouncedCallback((query) => {
-    // console.log(`[debounced] fired at ${performance.now().toFixed(1)} ms with: "${query}"`);
+   
     onSearch?.(query);
   }, delay);
 

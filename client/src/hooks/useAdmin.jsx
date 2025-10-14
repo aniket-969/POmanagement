@@ -5,6 +5,7 @@ import {
   createApprover,
   getPendingCreators,
   rejectUser,
+  updateUserStatus,
 } from "../api/queries/admin";
 import { useSearchParams } from "react-router-dom";
 
@@ -51,6 +52,18 @@ export const useAdmin = () => {
       toast.error(message);
       console.error("Approve user error:", error);
     },
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }) => updateUserStatus(id, { status }),
+  onSuccess: () => {
+    toast.success("User status updated successfully!");
+    queryClient.invalidateQueries(["admin", "pending-creators"]);
+  },
+  onError: (error) => {
+    const message = error?.response?.data?.message || "Failed to update user status.";
+    toast.error(message);
+  },
   });
 
   const createApproverMutation = useMutation({

@@ -31,3 +31,8 @@ export const getPendingCreators = ({ queryKey }) => {
   });
 };
 
+export const updateUserStatus = (id,data) => {
+  console.log(data)
+  return axiosClient.patch(`/${base}/${id}/status`, data);
+};
+ 
