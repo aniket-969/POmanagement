@@ -1,4 +1,3 @@
-// ApproverReviewedTable.jsx
 import React from "react";
 import {
   Box,
@@ -34,7 +33,6 @@ const formatINR = (value) => {
 const copyToClipboard = async (text) => {
   try {
     await navigator.clipboard.writeText(String(text));
-    // you may want to show a toast/snackbar here
   } catch (err) {
     console.error("Copy failed", err);
   }

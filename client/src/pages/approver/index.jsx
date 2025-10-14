@@ -4,7 +4,6 @@ import Topbar from '../../components/approver/topbar';
 import ApproverList from '../../components/approver/approverList';
 import SearchInput from '../../components/ui/search';
 import { useSearchParams } from 'react-router-dom';
-import ApproverReviewedList from '../../components/approver/approverReviewedList';
 
 const Approver = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,7 +27,7 @@ const Approver = () => {
       <Topbar/>
       <SearchInput onSearch={onSearch}/>
       <ApproverList/>
-      <ApproverReviewedList/>
+      {/* <ApproverReviewedList/> */}
     </Box>
   )
 }
