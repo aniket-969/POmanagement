@@ -22,6 +22,7 @@ import User from "../user/index.jsx"
 import RoleRedirect from "../../utils/RoleRedirect.jsx";
 import ApproverReviewed from "../approver/review/index.jsx";
 import ManageUsers from "../admin/users/index.jsx";
+import PODetail from "../shared/index.jsx"
 
 const Login = React.lazy(() => import("../auth/Login.jsx"));
 const Register = React.lazy(() => import("../auth/Register.jsx"));
@@ -51,7 +52,7 @@ export const AppRouter = () => {
               <Route path="approver" element={<Approver />} />
               <Route path="approver/reviewed" element={<ApproverReviewed />} />
               <Route path="user" element={<User />} />
-
+             <Route path="po/:id" element ={<PODetail/>}/>
             </Route>
 
             {/* Fallback */}

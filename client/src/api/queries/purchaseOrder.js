@@ -20,9 +20,11 @@ export const getApproverOrders = ({queryKey}) => {
 export const getApproverReviewedOrders = ({queryKey}) => {
   const [,,,params] = queryKey
   return axiosClient.get(`/${base}/approver/review`,{params})
-};
+}; 
 
 export const getPurchaseOrderById = (id) => {
+  console.log(id)
+
   return axiosClient.get(`/${base}/${id}`);
 };
 

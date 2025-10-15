@@ -44,7 +44,7 @@ export const usePO = () => {
     sortBy,
     sortOrder,
   };
-
+ 
   const poListQuery = useQuery({
     queryKey: ["pos", params],
     queryFn: getAllPurchaseOrders,
@@ -53,16 +53,6 @@ export const usePO = () => {
     staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
   });
-
-  const poQuery = (poId) =>
-    useQuery({
-      queryKey: ["po", poId],
-      queryFn: () => getPurchaseOrderById(poId),
-      refetchOnWindowFocus: false,
-      staleTime: 30 * 60 * 1000,
-      cacheTime: 60 * 60 * 1000,
-      enabled: !!poId,
-    });
 
   const createMutation = useMutation({
     mutationFn: createPurchaseOrder,
@@ -97,7 +87,6 @@ export const usePO = () => {
 
   return {
     poListQuery,
-    poQuery,
     createMutation,
     submitMutation,
   };
@@ -168,5 +157,15 @@ export const useApproverPO = ()=>{
   });
   return {approverListQuery,approveMutation,rejectMutation,approverReviewListQuery}
 }
+
+export const useSinglePO = (poId) =>
+  useQuery({
+    queryKey: ["po", poId],
+    queryFn: () => getPurchaseOrderById(poId),
+    refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    cacheTime: 60 * 60 * 1000,
+    enabled: !!poId, 
+  });
 
 export default usePO;
