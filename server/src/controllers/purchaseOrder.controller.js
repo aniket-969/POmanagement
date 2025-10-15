@@ -549,3 +549,109 @@ export const getApproverReviewedOrders = asyncHandler(async (req, res) => {
     )
   );
 });
+
+export const bulkUpdatePoStatus = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) throw new ApiError(401, "Unauthorized");
+
+  const { ids, status, comment } = req.body;
+
+  // basic validation
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new ApiError(400, "ids must be a non-empty array of PO ids.");
+  }
+  const idsNum = ids.map((v) => Number(v)).filter((v) => !Number.isNaN(v));
+  if (idsNum.length === 0) {
+    throw new ApiError(400, "Invalid ids array - must contain numeric ids.");
+  }
+
+  if (!["approved", "rejected"].includes(String(status))) {
+    throw new ApiError(400, "Invalid status. Allowed: 'approved' or 'rejected'.");
+  }
+
+  if (!comment || String(comment).trim().length === 0) {
+    throw new ApiError(400, "comment is required for bulk status update.");
+  }
+
+  // role checks
+  if (status === "approved" && user.role !== "approver") {
+    throw new ApiError(403, "Only approver can approve purchase orders.");
+  }
+  if (status === "rejected" && !["approver", "admin"].includes(user.role)) {
+    throw new ApiError(403, "Only approver or admin can reject purchase orders.");
+  }
+
+  // fetch current POs
+  const existing = await prisma.purchaseOrder.findMany({
+    where: { id: { in: idsNum } },
+    select: { id: true, status: true },
+  });
+
+  const existingMap = new Map(existing.map((p) => [p.id, p]));
+
+  const toProcess = [];
+  const skipped = [];
+
+  for (const id of idsNum) {
+    const po = existingMap.get(id);
+    if (!po) {
+      skipped.push({ id, reason: "not_found" });
+      continue;
+    }
+    if (po.status !== "submitted") {
+      skipped.push({ id, reason: `invalid_status (${po.status})` });
+      continue;
+    }
+    toProcess.push(id);
+  }
+
+  if (toProcess.length === 0) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, { processed: [], skipped }, "No POs eligible for update."));
+  }
+
+  // Update within transaction and create poHistory for each
+  const updated = await prisma.$transaction(async (tx) => {
+    const results = [];
+    for (const id of toProcess) {
+      const upd = await tx.purchaseOrder.update({
+        where: { id },
+        data: {
+          status,
+          reviewedAt: new Date(),
+          reviewedById: user.id,
+        },
+      });
+
+      await tx.poHistory.create({
+        data: {
+          poId: upd.id,
+          userId: user.id,
+          action: status === "approved" ? "approved" : "rejected",
+          comment: comment,
+          description: `${status === "approved" ? "Approved" : "Rejected"} by user ${user.id}`,
+        },
+      });
+
+      results.push(upd);
+    }
+    return results;
+  });
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        processed: updated,
+        skipped,
+        meta: {
+          requested: idsNum.length,
+          processed: updated.length,
+          skipped: skipped.length,
+        },
+      },
+      `Bulk ${status} completed for ${updated.length} POs`
+    )
+  );
+});

@@ -1,8 +1,9 @@
  import {Router} from "express"
-import { approvePurchaseOrder, createPurchaseOrder, getAllPurchaseOrders, getApproverOrders, getApproverReviewedOrders, getPurchaseOrderById, rejectPurchaseOrder, submitPurchaseOrder } from "../controllers/purchaseOrder.controller.js"
+import { approvePurchaseOrder, bulkUpdatePoStatus, createPurchaseOrder, getAllPurchaseOrders, getApproverOrders, getApproverReviewedOrders, getPurchaseOrderById, rejectPurchaseOrder, submitPurchaseOrder } from "../controllers/purchaseOrder.controller.js"
 import { verifyJWT } from "../middleware/auth.js"
-import { approvePurchaseOrderSchema, createPurchaseOrderSchema, rejectPurchaseOrderSchema } from "../zod/purchaseOrder.schema.js"
+import { approvePurchaseOrderSchema, createPurchaseOrderSchema, rejectPurchaseOrderSchema,bulkUpdatePoStatusSchema } from "../zod/purchaseOrder.schema.js"
 import { validate } from "../middleware/validator.js"
+import { bulkUpdatePoStatus } from './../controllers/purchaseOrder.controller';
 
  const router = Router()
 
@@ -14,6 +15,10 @@ import { validate } from "../middleware/validator.js"
  router.route("/approver/:id/reject").patch(validate(rejectPurchaseOrderSchema),rejectPurchaseOrder)
  router.route("/approver").get(getApproverOrders)
  router.route("/approver/review").get(getApproverReviewedOrders)
+ router.route("/approver/batch/status").patch(
+  validate(bulkUpdatePoStatusSchema),
+  bulkUpdatePoStatus
+);
  router.route("/").get(getAllPurchaseOrders)
  router.route("/:id").get(getPurchaseOrderById)
 

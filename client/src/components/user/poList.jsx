@@ -19,6 +19,7 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PoHistory from "../poHIstory";
 import usePO from "../../hooks/usePO";
+import { Link } from 'react-router-dom';
 
 const formatINR = (value) => {
   const amount = Number(value ?? 0);
@@ -132,19 +133,24 @@ export default function POListTable({
                     }}
                   >
                     <Typography
-                      sx={{
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        fontSize: "1.05rem",
-                        whiteSpace: "normal",
-                        wordBreak: "break-word",
-                        lineHeight: 1.25,
-                        pr: "32px",
-                      }}
-                      title={po.poNumber}
-                    >
-                      {po.poNumber}
-                    </Typography>
+      component={Link}
+      to={`/orders/po/${po.id}`}
+      sx={{
+        fontFamily: "monospace",
+        fontWeight: 700,
+        fontSize: "1.05rem",
+        whiteSpace: "normal",
+        wordBreak: "break-word",
+        lineHeight: 1.25,
+        pr: "32px",
+        color: "primary.main",
+        textDecoration: "none",
+        "&:hover": { textDecoration: "underline" },
+      }}
+      title={`View details for PO ${po.poNumber}`}
+    >
+      {po.poNumber}
+    </Typography>
                   </Box>
 
                   <Tooltip title="Copy PO number">

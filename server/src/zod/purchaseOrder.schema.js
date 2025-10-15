@@ -27,3 +27,10 @@ export const approvePurchaseOrderSchema = z.object({
 export const rejectPurchaseOrderSchema = z.object({
   reviewComment: stringValidation(1, 500, "Review comment"),
 });
+
+
+export const bulkUpdatePoStatusSchema = z.object({
+  ids: z.array(z.preprocess((v) => Number(v), z.number().int().positive())).min(1),
+  status: z.enum(["approved", "rejected"]),
+  comment: z.string().min(1, "comment is required"),
+});

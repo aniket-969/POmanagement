@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PoHistory from "../poHIstory";
+import { Link } from 'react-router-dom';
 
 const formatINR = (value) => {
   const num = Number(value ?? 0);
@@ -122,15 +123,24 @@ const ApproverReviewedTable = ({ data = [] }) => {
               }}
             >
               <Typography
-                sx={{
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  fontSize: "0.95rem",
-                  lineHeight: 1.4,
-                }}
-              >
-                {po.poNumber}
-              </Typography>
+                    component={Link}
+                    to={`/orders/po/${po.id}`}
+                    sx={{
+                      fontFamily: "monospace",
+                      fontWeight: 700,
+                      fontSize: "1.05rem",
+                      whiteSpace: "normal",
+                      wordBreak: "break-word",
+                      lineHeight: 1.25,
+                      pr: "32px",
+                      color: "primary.main",
+                      textDecoration: "none",
+                      "&:hover": { textDecoration: "underline" },
+                    }}
+                  >
+                    {po.poNumber}
+                  </Typography>
+
 
               <Tooltip title="Copy PO number">
                 <IconButton
