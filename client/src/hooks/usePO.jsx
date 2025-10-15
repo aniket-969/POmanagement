@@ -8,6 +8,7 @@ import {
   approvePurchaseOrder,
   rejectPurchaseOrder,
   getApproverReviewedOrders,
+  bulkUpdatePoStatus,
 } from "../api/queries/purchaseOrder.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +45,7 @@ export const usePO = () => {
     sortBy,
     sortOrder,
   };
- 
+
   const poListQuery = useQuery({
     queryKey: ["pos", params],
     queryFn: getAllPurchaseOrders,
@@ -83,8 +84,6 @@ export const usePO = () => {
     },
   });
 
- 
-
   return {
     poListQuery,
     createMutation,
@@ -92,8 +91,7 @@ export const usePO = () => {
   };
 };
 
-export const useApproverPO = ()=>{
-
+export const useApproverPO = () => {
   const queryClient = useQueryClient();
 
   const [searchParams] = useSearchParams();
@@ -124,7 +122,7 @@ export const useApproverPO = ()=>{
   });
 
   const approverReviewListQuery = useQuery({
-    queryKey: ["approver", "pos","review", params],
+    queryKey: ["approver", "pos", "review", params],
     queryFn: getApproverReviewedOrders,
     enabled: true,
     refetchOnWindowFocus: false,
@@ -132,7 +130,7 @@ export const useApproverPO = ()=>{
     cacheTime: 60 * 60 * 1000,
   });
 
-   const approveMutation = useMutation({
+  const approveMutation = useMutation({
     mutationFn: ({ id, data }) => approvePurchaseOrder(id, data),
     onSuccess: (_, variables) => {
       toast("Purchase order approved");
@@ -155,8 +153,27 @@ export const useApproverPO = ()=>{
       console.error("Reject PO error:", error);
     },
   });
-  return {approverListQuery,approveMutation,rejectMutation,approverReviewListQuery}
-}
+
+  const updateBulkStatusMutation = useMutation({
+    mutationFn: ( data ) => bulkUpdatePoStatus(data),
+    onSuccess: () => {
+      toast("PO status updated");
+      queryClient.invalidateQueries(["approver", "pos"]);
+    },
+    onError: (error) => {
+      toast(error?.response?.data?.message || "Failed to update po status");
+      console.error("Reject PO error:", error);
+    },
+  });
+
+  return {
+    approverListQuery,
+    approveMutation,
+    rejectMutation,
+    approverReviewListQuery,
+    updateBulkStatusMutation,
+  };
+};
 
 export const useSinglePO = (poId) =>
   useQuery({
@@ -165,7 +182,7 @@ export const useSinglePO = (poId) =>
     refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
     cacheTime: 60 * 60 * 1000,
-    enabled: !!poId, 
+    enabled: !!poId,
   });
 
 export default usePO;

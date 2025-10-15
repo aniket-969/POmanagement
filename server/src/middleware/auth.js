@@ -46,7 +46,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   if (!user) {
     throw new ApiError(401, "Unauthorized request. User not found.");
   }
-console.log("Authorized user")
+// console.log("Authorized user")
   req.user = user;
   next();
 });

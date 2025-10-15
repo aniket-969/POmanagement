@@ -1,9 +1,8 @@
  import {Router} from "express"
-import { approvePurchaseOrder, bulkUpdatePoStatus, createPurchaseOrder, getAllPurchaseOrders, getApproverOrders, getApproverReviewedOrders, getPurchaseOrderById, rejectPurchaseOrder, submitPurchaseOrder } from "../controllers/purchaseOrder.controller.js"
+import { approvePurchaseOrder, bulkUpdatePoStatus, createPurchaseOrder, getAllPurchaseOrders, getApproverOrders, getApproverReviewedOrders, getPurchaseOrderById, rejectPurchaseOrder, submitPurchaseOrder  } from "../controllers/purchaseOrder.controller.js"
 import { verifyJWT } from "../middleware/auth.js"
 import { approvePurchaseOrderSchema, createPurchaseOrderSchema, rejectPurchaseOrderSchema,bulkUpdatePoStatusSchema } from "../zod/purchaseOrder.schema.js"
 import { validate } from "../middleware/validator.js"
-import { bulkUpdatePoStatus } from './../controllers/purchaseOrder.controller';
 
  const router = Router()
 

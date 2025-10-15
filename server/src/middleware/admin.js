@@ -11,6 +11,6 @@ export const verifyAdmin = asyncHandler(async (req, res, next) => {
   if (user.role !== "admin") {
     throw new ApiError(403, "Forbidden. Only admins can perform this action.");
   }
-console.log("Yup that's an admin")
+// console.log("Yup that's an admin")
   next();
 });
