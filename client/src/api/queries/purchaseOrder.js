@@ -40,12 +40,13 @@ export const approvePurchaseOrder = (id, data) => {
 };
 
 export const rejectPurchaseOrder = (id, data) => {
+  console.log(id,data)
+  return
   return axiosClient.patch(`/${base}/approver/${id}/reject`, data);
 };
 
 export const bulkUpdatePoStatus = ( data) => {
   console.log(data)
-  return
   return axiosClient.patch(`/${base}/approver/batch/status`, data);
 };
 
