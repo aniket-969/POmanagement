@@ -35,7 +35,8 @@ const ManageUsers = () => {
   return (
     <Box
       sx={{
-        p: 1,
+        px: 4,
+        py:1
       }}
     >
       <Box
