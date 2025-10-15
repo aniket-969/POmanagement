@@ -1,29 +1,65 @@
-import React from 'react'
-import Logout from '../logout'
-import { Button, Typography } from '@mui/material';
-import { Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Tooltip } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import DescriptionIcon from "@mui/icons-material/Description";
+import Logout from "../logout";
 
 const Topbar = () => {
-    const session = JSON.parse(localStorage.getItem("session"))
+  const session = JSON.parse(localStorage.getItem("session"));
+  const navigate = useNavigate();
 
   return (
-    <Box sx={{
-        display:"flex",
-        justifyContent:"space-around",
-        mt:1
-    }}>
-      <Typography>
-        {session?.user?.fullName}
-      </Typography>
-      <Link to={"/orders/approver/reviewed"}>
-      <Button variant='outlined'>Your PO</Button>
-      </Link>
-      
-        <Logout/>
+    <AppBar
+      position="static"
+      color="default"
+      sx={{
+        boxShadow: "0px 1px 4px rgba(0,0,0,0.1)",
+        backgroundColor: "#fff",
+        borderBottom: "1px solid #e0e0e0",
+      }}
+    >
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Left Section */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <DescriptionIcon color="primary" />
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600, color: "primary.main", cursor: "pointer" }}
+            onClick={() => navigate("/approver")}
+          >
+            Approver Dashboard
+          </Typography>
+        </Box>
 
-    </Box>
-  )
-}
+        {/* Center Navigation */}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button
+            component={Link}
+            to="/orders/approver/reviewed"
+            variant="outlined"
+            size="smal"
+            sx={{
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 500,
+            }}
+          >
+            Your POs
+          </Button>
+        </Box>
 
-export default Topbar
+        {/* Right Section (User & Logout) */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        
+          <Tooltip title="Logout">
+            <IconButton size="small" color="error">
+              <Logout />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Topbar;

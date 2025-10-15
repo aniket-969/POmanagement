@@ -23,14 +23,14 @@ const Approver = () => {
         flexDirection: "column",
         gap: 2,
         justifyItems: "center",
-        pt: 1,
+       
       }}
     >
       <Topbar />
       <Box sx={{
         display:'flex',
         justifyContent:'center',
-        m:2
+        m:1
       }}>
         <SearchInput onSearch={onSearch} />
       </Box>

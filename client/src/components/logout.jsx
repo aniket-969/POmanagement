@@ -8,7 +8,7 @@ const Logout = () => {
         logoutMutation.mutateAsync()
     }
   return (
-    <Button onClick={onClick} variant="contained">Logout</Button>
+    <Button size='small' onClick={onClick} variant="contained">Logout</Button>
   )
 }
 

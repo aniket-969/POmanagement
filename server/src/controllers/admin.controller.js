@@ -4,7 +4,6 @@ import { ApiError } from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
 import bcrypt from "bcrypt"
 
-
 const ALLOWED_STATUS = ["active", "suspended"];
 const ALLOWED_ROLES = ["creator", "approver"];
 

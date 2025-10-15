@@ -29,7 +29,7 @@ const User = () => {
     <Box sx={{ width: "100%" ,
        display: "flex",
        flexDirection:"column",
-          gap:2
+          gap:2,
     }}>
       <Topbar />
 
@@ -39,7 +39,8 @@ const User = () => {
           // justifyItems: "center",
           // alignItems: "center",
           gap: 4,
-          width: "100%",
+          // width: "100%",
+          pl:4
         }}
       >
         <SearchInput onSearch={onSearch} />

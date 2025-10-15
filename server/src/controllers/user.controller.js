@@ -3,7 +3,7 @@ import prisma from "../db/index.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
-import {ApiResponse} from "../utils/ApiResponse.js"
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const isPasswordCorrect = async (plainPassword, passwordHash) => {
   if (!passwordHash) return false;
@@ -19,7 +19,7 @@ export const getUserByEmail = async (email) => {
       fullName: true,
       role: true,
       status: true,
-      passwordHash: true,  
+      passwordHash: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -34,8 +34,8 @@ const createAccessToken = (payload) => {
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
-console.log(req.body)
- 
+  console.log(req.body);
+
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new ApiError(409, "User already exists with this email.");
@@ -84,13 +84,19 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   if (user.status === "pending") {
-    throw new ApiError(403, "Account pending approval. Please wait for admin approval.");
+    throw new ApiError(
+      403,
+      "Account pending approval. Please wait for admin approval."
+    );
   }
   if (user.status === "suspended") {
     throw new ApiError(403, "Account suspended. Contact administrator.");
   }
   if (user.status !== "active") {
-    throw new ApiError(403, `Account not allowed to login (status: ${user.status}).`);
+    throw new ApiError(
+      403,
+      `Account not allowed to login (status: ${user.status}).`
+    );
   }
 
   const validPassword = await isPasswordCorrect(password, user.passwordHash);
@@ -110,22 +116,21 @@ export const login = asyncHandler(async (req, res) => {
 
   const payload = { id: user.id, role: user.role, email: user.email };
   const accessToken = createAccessToken(payload);
-const cookieOptions = {
-  httpOnly: true,
-  secure:true,
-  path: "/", 
-};
- return res
-  .cookie("accessToken", accessToken, cookieOptions)
-  .json(new ApiResponse(200, { user: safeUser }, "Login successful"));
+  const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+    path: "/",
+  };
+  return res
+    .cookie("accessToken", accessToken, cookieOptions)
+    .json(new ApiResponse(200, { user: safeUser }, "Login successful"));
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  
   const cookieOptions = {
     httpOnly: true,
-    secure:true,
-    path: "/", 
+    secure: true,
+    path: "/",
   };
 
   res
@@ -145,4 +150,3 @@ export const fetchSession = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { user }, "Session fetched"));
 });
-

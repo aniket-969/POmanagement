@@ -24,10 +24,13 @@ const PoTable = () => {
   const totalPages = apiResp?.totalPages ?? 1;
   
   return (
-    <div>
+    <Box sx={{
+      px:4,
+      mt:1
+    }}>
         <POList data={payload}/>
         <PaginationControls  page={currentPage} totalPages={totalPages}/>
-    </div>
+    </Box>
   )
 }
 

@@ -7,7 +7,8 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-// ---------- ENUMS ----------
+
+// ENUMS 
 enum UserRole {
   creator
   approver
@@ -36,7 +37,8 @@ enum PoAction {
   comment_added
 }
 
-// ---------- MODELS ----------
+// MODELS 
+
 model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique @db.VarChar(255)

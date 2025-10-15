@@ -20,7 +20,10 @@ const ApproverReviewedList = () => {
   const currentPage = data?.data?.data?.meta?.page || 1;
 //   console.log(payloadData);
   return (
-    <Box>
+    <Box sx={{
+      px:4,
+      mt:4
+    }}>
         <Typography
         variant="h6"
         sx={{

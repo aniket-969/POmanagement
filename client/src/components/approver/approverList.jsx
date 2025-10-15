@@ -27,12 +27,14 @@ const ApproverList = () => {
   const currentPage = apiResp?.page;
   const totalPages = apiResp?.totalPages ?? 1;
   return (
-    <div>
+    <Box sx={{
+      px:4
+    }}>
      <Typography
         variant="h6"
         sx={{
           fontWeight: 700,
-          mb: 2,
+          
           textAlign:"center"
         }}
       >
@@ -40,7 +42,7 @@ const ApproverList = () => {
       </Typography>
       <ApproverTable data={payload} />
       <PaginationControls page={currentPage} totalPages={totalPages} />
-    </div>
+    </Box>
   );
 };
 

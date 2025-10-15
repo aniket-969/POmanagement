@@ -377,7 +377,7 @@ export const getAllPurchaseOrders = asyncHandler(async (req, res) => {
 
 export const getApproverOrders = asyncHandler(async (req, res) => {
   const user = req.user;
-  if (!user) throw new ApiError(401, "Unauthorized");
+  
   if (!["approver", "admin"].includes(user.role)) {
     throw new ApiError(403, "Only approver or admin can access this endpoint.");
   }
